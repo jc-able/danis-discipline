@@ -252,7 +252,7 @@ All pages will include:
 }
 ```
 
-### 4.6 Orders
+### 4.6 Display Orders
 ```javascript
 {
   id: String,                // Unique identifier (REQUIRED, auto-generated UUID)
@@ -293,8 +293,8 @@ All pages will include:
 ### 5.6 Image Retrieval
 - `GET /api/images/:category/:id` - Retrieve images from Supabase storage
 
-### 5.7 Orders
-- `GET /api/orders/:id` - Retrieve order status (for confirmation pages)
+### 5.7 Display Orders
+- `GET /api/display-orders/:id` - Retrieve order status (for confirmation pages)
 
 ## 6. UI/UX Guidelines
 
