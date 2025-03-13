@@ -32,6 +32,45 @@ Dani's Discipline is a fitness coaching business website designed to:
 
 For detailed specifications, see the [Product Requirements Document](docs/PRD.md).
 
+## Current Status
+
+### Completed
+- ✅ Environment configuration (Supabase, Stripe)
+- ✅ Client-side React app setup
+- ✅ Component library with Miami Vice theme
+- ✅ Responsive layout with mobile-friendly design
+- ✅ All page components (Home, Coaching, Plans, Training, About, Contact)
+- ✅ Checkout success and cancel pages
+- ✅ Integration with Supabase client for data fetching
+- ✅ React Hook Form implementation for forms
+- ✅ Stripe checkout flow interface
+
+### In Progress / Remaining Tasks
+- ⏳ Server-side API implementation
+- ⏳ Actual image assets (currently using placeholders)
+- ⏳ Supabase database table setup:
+  - `coaching_packages` table
+  - `independent_plans` table
+  - `certifications` table
+  - `newsletter_subscribers` table
+  - `contact_messages` table
+  - `display_orders` table
+- ⏳ Complete Stripe integration on backend
+- ⏳ Email confirmation for purchases
+- ⏳ Testing across different browsers and devices
+- ⏳ Deployment to Vercel
+
+## Recent Changes (March 2024)
+- Set up environment files for client and server
+- Created the complete client-side application with:
+  - Reusable components (Header, Footer, Button, Section)
+  - Page components for all required pages
+  - Supabase client service with API functions
+  - Stripe service for handling payments
+  - Form handling with validation
+  - Miami Vice theme using CSS variables
+  - Responsive design for all screen sizes
+
 ## Development Setup
 
 ### Prerequisites
@@ -70,6 +109,29 @@ npm run dev
 cd client
 npm start
 ```
+
+## Next Steps for Developers
+If you're picking up this project, here's what you should focus on next:
+
+1. **Backend Implementation**:
+   - Implement the Express routes according to the API endpoints defined in the PRD
+   - Connect Stripe for actual payment processing
+   - Set up webhook handlers for Stripe events
+
+2. **Supabase Setup**:
+   - Create the database tables as defined in the PRD
+   - Configure storage buckets for images
+   - Set up row-level security policies
+
+3. **Image Assets**:
+   - Replace placeholder images with actual assets
+   - Add logo files (favicon.ico, logo192.png, logo512.png)
+
+4. **Testing**:
+   - Test form submissions
+   - Test Stripe checkout flow
+   - Ensure mobile responsiveness
+   - Cross-browser testing
 
 ## License
 

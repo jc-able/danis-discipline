@@ -1,0 +1,122 @@
+/* Global CSS */
+:root {
+  /* Primary Colors from PRD */
+  --teal: #8CDCD9;
+  --pink: #E686D3;
+  /* Secondary Colors from PRD */
+  --black: #000000;
+  --white: #FFFFFF;
+  --light-gray: #F5F5F5;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+  color: var(--black);
+  background-color: var(--white);
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Georgia', serif; /* Placeholder for serif font */
+  margin-bottom: 1rem;
+}
+
+p {
+  margin-bottom: 1rem;
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+  background-color: var(--pink);
+  color: var(--white);
+}
+
+.btn-primary:hover {
+  background-color: #d371be; /* Darker pink */
+}
+
+.btn-secondary {
+  background-color: var(--teal);
+  color: var(--black);
+}
+
+.btn-secondary:hover {
+  background-color: #7ac7c4; /* Darker teal */
+}
+
+/* Container */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Section styles */
+.section {
+  padding: 4rem 0;
+}
+
+.section-teal {
+  background-color: var(--teal);
+}
+
+.section-pink {
+  background-color: var(--pink);
+}
+
+/* Responsive styling */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1.5rem;
+  }
+  
+  .section {
+    padding: 2rem 0;
+  }
+  
+  .btn {
+    padding: 0.6rem 1.2rem;
+  }
+}
+
+/* Form styles */
+input, textarea, select {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+/* Utility classes */
+.text-center {
+  text-align: center;
+}
+
+.italic {
+  font-style: italic;
+}
