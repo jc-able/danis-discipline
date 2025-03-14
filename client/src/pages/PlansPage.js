@@ -82,8 +82,8 @@ const CategoryNav = styled.div`
   margin: 2rem 0;
   flex-wrap: wrap;
   position: sticky;
-  top: 0;
-  z-index: 100;
+  top: 70px;
+  z-index: 90;
   background-color: var(--white);
   padding: 1rem 0;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
