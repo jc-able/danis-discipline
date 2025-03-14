@@ -1,15 +1,16 @@
 # Dani's Discipline
 
-A modern fitness and nutrition coaching website with a distinctive Miami Vice theme (teal and pink), offering personalized coaching services, independent fitness plans, and nutrition guidance.
+A modern fitness and nutrition website with a distinctive Miami Vice theme (teal and pink), offering independent fitness plans and nutrition guidance. Personalized coaching services are planned for future development.
 
 ## Project Overview
 
-Dani's Discipline is a fitness coaching business website designed to:
-- Showcase personalized coaching services and independent plans
+Dani's Discipline is a fitness business website designed to:
+- Showcase independent plans
 - Enable purchases via Stripe integration
 - Provide contact forms for inquiries
 - Allow newsletter signups
 - Display coach certifications and credentials
+- *(Future Phase)* Add personalized coaching services
 
 ## Technology Stack
 
@@ -23,10 +24,11 @@ Dani's Discipline is a fitness coaching business website designed to:
 ## Key Features
 
 - Modern, responsive design with Miami Vice theme (teal and pink)
-- E-commerce functionality for purchasing coaching packages
+- E-commerce functionality for purchasing plans
 - Independent plans showcase
 - Contact form and newsletter signup
 - Coach profile and certifications showcase
+- *(Future Phase)* Personalized coaching packages
 
 ## Documentation
 
@@ -39,7 +41,7 @@ For detailed specifications, see the [Product Requirements Document](docs/PRD.md
 - ✅ Client-side React app setup
 - ✅ Component library with Miami Vice theme
 - ✅ Responsive layout with mobile-friendly design
-- ✅ All page components (Home, Coaching, Plans, Training, About, Contact)
+- ✅ All page components (Home, Plans, Training, About, Contact)
 - ✅ Checkout success and cancel pages
 - ✅ Integration with Supabase client for data fetching
 - ✅ React Hook Form implementation for forms
@@ -49,12 +51,14 @@ For detailed specifications, see the [Product Requirements Document](docs/PRD.md
 - ⏳ Server-side API implementation
 - ⏳ Actual image assets (currently using placeholders)
 - ⏳ Supabase database table setup:
-  - `coaching_packages` table
   - `independent_plans` table
   - `certifications` table
   - `newsletter_subscribers` table
   - `contact_messages` table
   - `display_orders` table
+  - `home_polaroids` table
+  - `homepage_settings` table
+  - *(Future Phase)* `coaching_packages` table
 - ⏳ Complete Stripe integration on backend
 - ⏳ Email confirmation for purchases
 - ⏳ Testing across different browsers and devices

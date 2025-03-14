@@ -3,21 +3,22 @@
 ## 1. Project Overview
 
 ### 1.1 Introduction
-Dani's Discipline is a fitness and nutrition coaching website designed to provide personalized coaching services, independent fitness plans, and nutrition guidance. The website will feature a modern, visually appealing interface with a distinctive "Miami Vice" theme characterized by teal and pink color schemes.
+Dani's Discipline is a fitness and nutrition coaching website designed to provide independent fitness plans and nutrition guidance. The website will feature a modern, visually appealing interface with a distinctive "Miami Vice" theme characterized by teal and pink color schemes. Personalized coaching services will be planned for future phases of the project.
 
 ### 1.2 Project Goals
-- Create a responsive, modern website for a fitness and nutrition coaching business
-- Allow potential clients to learn about coaching services and independent plans
-- Enable clients to purchase coaching packages via Stripe integration
+- Create a responsive, modern website for a fitness and nutrition business
+- Allow potential clients to learn about independent plans
+- Enable clients to purchase plans via Stripe integration
 - Provide a contact form for inquiries
 - Allow users to sign up for a newsletter
 - Display coach certifications and credentials
 - Showcase the coach's philosophy and background
+- *(Future Phase)* Implement personalized coaching services
 
 ### 1.3 Target Audience
-- Individuals seeking personalized fitness coaching
 - People looking for self-guided fitness and nutrition plans
 - Those interested in nutrition guidance and sustainable fitness habits
+- *(Future Phase)* Individuals seeking personalized fitness coaching
 
 ### 1.4 Success Metrics
 - **Functional Purchase Flow**: Complete purchase process with confirmations
@@ -96,18 +97,21 @@ All pages will include:
   - Down arrow for navigation
 - **Main Content**:
   - "LET'S WORK together" section with explanation text
-  - Three service option cards (1:1 COACHING, INDEPENDENT PLANS, WORKOUT PROGRAMS)
+  - Service option cards (INDEPENDENT PLANS, WORKOUT PROGRAMS)
   - Each card has image placeholder and link to respective page
+  - *(Future Phase)* Add 1:1 COACHING card
 - **Call-to-Action Section**:
   - "WHERE DO I start?" heading
   - Explanation text
   - "START NOW" button
 - **Service Details Section**:
-  - "1:1 COACHING" details with image
-  - "What's included..." list (12 WEEKS LONG, 1:1 PERSONAL COACH, etc.)
-  - "LEARN MORE" button
+  - *(Hidden for initial release)* "1:1 COACHING" details with image
+  - *(Hidden for initial release)* "What's included..." list (12 WEEKS LONG, 1:1 PERSONAL COACH, etc.)
+  - *(Hidden for initial release)* "LEARN MORE" button
 
 ### 3.3 1:1 Coaching Page
+*(Note: This page will be hidden in the initial release and implemented in a future phase)*
+
 - **Header Section**:
   - "1:1 coaching" heading
   - "PERSONALIZED FITNESS & NUTRITION GUIDANCE" subheading
@@ -182,6 +186,8 @@ All pages will include:
 ## 4. Data Models
 
 ### 4.1 Coaching Packages
+*(Note: This table exists but will not be utilized in the initial release - reserved for future phases)*
+
 ```javascript
 {
   id: String,                // Unique identifier (REQUIRED, auto-generated UUID)
@@ -205,7 +211,7 @@ All pages will include:
   title: String,             // Plan title (REQUIRED, 3-100 chars)
   description: String,       // Plan description (REQUIRED, 10-1000 chars)
   icon: String,              // Icon reference (REQUIRED)
-  order: Number,             // Display order (REQUIRED, 1-99)
+  display_order: Number,     // Display order (REQUIRED, 1-99) - Note: named display_order in database
   stripeProductId: String,   // Stripe product ID for checkout (REQUIRED after creation in Stripe)
   price: Number,             // Plan price (REQUIRED, positive value)
   active: Boolean,           // Whether plan is active (REQUIRED, default: true)
@@ -269,9 +275,58 @@ All pages will include:
 }
 ```
 
+### 4.7 Home Polaroids
+```javascript
+{
+  id: String,                    // Unique identifier (REQUIRED, auto-generated UUID)
+  name: String,                  // Name/title of the polaroid (REQUIRED)
+  image_path: String,            // Path to image (REQUIRED)
+  position: String,              // Position of polaroid (REQUIRED)
+  rotation: String,              // Rotation angle (REQUIRED)
+  tape_top: String,              // Tape position top (OPTIONAL)
+  tape_left: String,             // Tape position left (OPTIONAL)
+  tape_bottom: String,           // Tape position bottom (OPTIONAL)
+  tape_right: String,            // Tape position right (OPTIONAL)
+  tape_rotation: String,         // Tape rotation (OPTIONAL)
+  second_tape_rotation: String,  // Second tape rotation (OPTIONAL)
+  position_top: String,          // Detailed position top (OPTIONAL)
+  position_left: String,         // Detailed position left (OPTIONAL)
+  position_right: String,        // Detailed position right (OPTIONAL)
+  position_bottom: String,       // Detailed position bottom (OPTIONAL)
+  display_order: Number,         // Display order (REQUIRED)
+  hide_on_mobile: Boolean,       // Whether to hide on mobile (OPTIONAL)
+  active: Boolean,               // Whether polaroid is active (REQUIRED)
+  image_full_url: String,        // Complete image URL (OPTIONAL)
+  image_content_type: String,    // Image MIME type (OPTIONAL)
+  image_original_filename: String, // Original filename (OPTIONAL)
+  image_storage_path: String,    // Storage path in Supabase (OPTIONAL)
+  image_uploaded_at: Date,       // Upload timestamp (OPTIONAL)
+  createdAt: Date,               // Creation date (OPTIONAL)
+  updatedAt: Date                // Last update date (OPTIONAL)
+}
+```
+
+### 4.8 Homepage Settings
+```javascript
+{
+  id: String,                // Unique identifier (REQUIRED, auto-generated UUID)
+  section_name: String,      // Section name (REQUIRED)
+  section_type: String,      // Section type (REQUIRED)
+  background_color: String,  // Background color (OPTIONAL)
+  text_color: String,        // Text color (OPTIONAL)
+  image_url: String,         // Image URL (OPTIONAL)
+  image_description: String, // Image alt text/description (OPTIONAL)
+  display_order: Number,     // Display order (REQUIRED)
+  active: Boolean,           // Whether section is active (OPTIONAL)
+  createdAt: Date,           // Creation date (OPTIONAL)
+  updatedAt: Date            // Last update date (OPTIONAL)
+}
+```
+
 ## 5. API Endpoints
 
 ### 5.1 Coaching Packages
+*(Note: These endpoints exist but will not be utilized in the initial release - reserved for future phases)*
 - `GET /api/coaching-packages` - Retrieve all coaching packages
 - `GET /api/coaching-packages/:id` - Retrieve a specific coaching package
 
