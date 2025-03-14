@@ -9,7 +9,7 @@ Dani's Discipline is a fitness and nutrition coaching website designed to provid
 - Create a responsive, modern website for a fitness and nutrition business
 - Allow potential clients to learn about independent plans
 - Enable clients to purchase plans via Stripe integration
-- Provide a contact form for inquiries
+- Provide links to social media platforms for communication
 - Display coach certifications and credentials
 - Showcase the coach's philosophy and background
 - *(Future Phase)* Implement personalized coaching services
@@ -166,15 +166,12 @@ All pages will include:
 ### 3.6 Contact Page
 - **Header Section**:
   - "get in touch" heading
-  - "I'D LOVE TO HEAR FROM YOU" subheading
-- **Contact Form**:
-  - "Send Me a Message" heading
-  - Form fields: NAME, EMAIL, SUBJECT, MESSAGE
-  - "SEND MESSAGE" button
-- **Contact Information**:
-  - PHONE section with phone number
-  - EMAIL section with email address
-  - ADDRESS section with physical address
+  - "LET'S CONNECT THROUGH SOCIAL MEDIA" subheading
+- **Social Media Link Tree**:
+  - Various platform links styled as cards (Instagram, Facebook, TikTok, etc.)
+  - Email contact option
+  - Each card has a platform icon and description
+  - Consistent Miami Vice styling with platform-specific colors
 
 ## 4. Data Models
 
@@ -214,30 +211,22 @@ All pages will include:
 ```
 
 ### 4.3 Certifications
+*(Note: This table has been removed. Certifications are now stored as static data in the AboutPage component)*
+
 ```javascript
-{
-  id: String,                // Unique identifier (REQUIRED, auto-generated UUID)
-  title: String,             // Certification title (REQUIRED, 3-100 chars)
-  organization: String,      // Issuing organization (REQUIRED, 2-100 chars)
-  year: Number,              // Year obtained (REQUIRED, valid year format)
-  imageUrl: String,          // URL to image in Supabase storage (OPTIONAL)
-  createdAt: Date,           // Creation date (REQUIRED, auto-generated)
-  updatedAt: Date            // Last update date (REQUIRED, auto-updated)
-}
+// Static certifications data structure:
+[
+  { 
+    id: Number,              // Unique identifier
+    title: String,           // Certification title 
+    organization: String,    // Issuing organization
+    year: Number             // Year obtained
+  }
+]
 ```
 
 ### 4.4 Contact Messages
-```javascript
-{
-  id: String,                // Unique identifier (REQUIRED, auto-generated UUID)
-  name: String,              // Sender name (REQUIRED, 2-100 chars)
-  email: String,             // Sender email (REQUIRED, valid email format)
-  subject: String,           // Message subject (REQUIRED, 2-200 chars)
-  message: String,           // Message content (REQUIRED, 10-5000 chars)
-  date: Date,                // Submission date (REQUIRED, auto-generated)
-  isRead: Boolean            // Read status (REQUIRED, default: false)
-}
-```
+*(Note: This table has been removed. Contact functionality has been replaced with a social media link tree)*
 
 ### 4.5 Display Orders
 ```javascript
@@ -257,6 +246,8 @@ All pages will include:
 ```
 
 ### 4.6 Home Polaroids
+*(Note: This table remains in the database, but the polaroids functionality has been simplified)*
+
 ```javascript
 {
   id: String,                    // Unique identifier (REQUIRED, auto-generated UUID)
@@ -288,21 +279,7 @@ All pages will include:
 ```
 
 ### 4.7 Homepage Settings
-```javascript
-{
-  id: String,                // Unique identifier (REQUIRED, auto-generated UUID)
-  section_name: String,      // Section name (REQUIRED)
-  section_type: String,      // Section type (REQUIRED)
-  background_color: String,  // Background color (OPTIONAL)
-  text_color: String,        // Text color (OPTIONAL)
-  image_url: String,         // Image URL (OPTIONAL)
-  image_description: String, // Image alt text/description (OPTIONAL)
-  display_order: Number,     // Display order (REQUIRED)
-  active: Boolean,           // Whether section is active (OPTIONAL)
-  createdAt: Date,           // Creation date (OPTIONAL)
-  updatedAt: Date            // Last update date (OPTIONAL)
-}
-```
+*(Note: This table has been removed)*
 
 ## 5. API Endpoints
 
@@ -316,7 +293,7 @@ All pages will include:
 - `GET /api/independent-plans/:id` - Retrieve a specific independent plan
 
 ### 5.3 Contact Form
-- `POST /api/contact` - Submit a contact form message
+*(Note: This endpoint has been removed. Contact functionality has been replaced with a social media link tree)*
 
 ### 5.4 Stripe Integration
 - `POST /api/create-checkout-session` - Create a Stripe checkout session
@@ -514,6 +491,34 @@ All pages will include:
 - Security patches and dependency updates
 - Performance monitoring
 - Backup strategy
+
+## 12. Recent Changes
+
+### 12.1 Database Simplification (April 2024)
+- **Contact Form Removal**:
+  - Replaced contact form functionality with social media link tree
+  - Removed `contact_messages` table and related endpoints
+  - Updated ContactPage component to display social media links
+  
+- **Certifications Table Removal**:
+  - Moved certifications to static data in the AboutPage component
+  - Removed `certifications` table and related endpoints
+  
+- **Polaroids Simplification**:
+  - Simplified polaroids functionality
+  - Removed polaroids routes from API
+  
+- **Homepage Settings Removal**:
+  - Removed `homepage_settings` table
+  - Moved content to static components
+
+### 12.2 Potential Enhancements
+- User authentication for client portal
+- Blog or content section
+- Online booking system for coaching sessions
+- Progress tracking features
+- E-commerce expansion for more products
+- Admin panel for content management
 
 ---
 

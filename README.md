@@ -7,7 +7,7 @@ A modern fitness and nutrition website with a distinctive Miami Vice theme (teal
 Dani's Discipline is a fitness business website designed to:
 - Showcase independent plans
 - Enable purchases via Stripe integration
-- Provide contact forms for inquiries
+- Connect with clients through social media platforms
 - Display coach certifications and credentials
 - *(Future Phase)* Add personalized coaching services
 
@@ -25,7 +25,7 @@ Dani's Discipline is a fitness business website designed to:
 - Modern, responsive design with Miami Vice theme (teal and pink)
 - E-commerce functionality for purchasing plans
 - Independent plans showcase
-- Contact form for inquiries
+- Social media link tree for client connections
 - Coach profile and certifications showcase
 - *(Future Phase)* Personalized coaching packages
 
@@ -51,18 +51,27 @@ For detailed specifications, see the [Product Requirements Document](docs/PRD.md
 - ⏳ Actual image assets (currently using placeholders)
 - ⏳ Supabase database table setup:
   - `independent_plans` table
-  - `certifications` table
-  - `contact_messages` table
   - `display_orders` table
   - `home_polaroids` table
-  - `homepage_settings` table
   - *(Future Phase)* `coaching_packages` table
 - ⏳ Complete Stripe integration on backend
 - ⏳ Email confirmation for purchases
 - ⏳ Testing across different browsers and devices
 - ⏳ Deployment to Vercel
 
-## Recent Changes (March 2024)
+## Recent Changes
+
+### April 2024
+- **Database Simplification**:
+  - Replaced contact form with social media link tree
+  - Removed `contact_messages` table and related functionality
+  - Moved certifications to static data in the AboutPage component
+  - Removed `certifications` table
+  - Removed `homepage_settings` table
+  - Simplified polaroids functionality
+  - Updated PRD to reflect these changes
+
+### March 2024
 - Set up environment files for client and server
 - Created the complete client-side application with:
   - Reusable components (Header, Footer, Button, Section)
@@ -75,7 +84,6 @@ For detailed specifications, see the [Product Requirements Document](docs/PRD.md
 - Implemented backend API with endpoints for:
   - Independent plans
   - Coaching packages (future implementation)
-  - Contact form submissions
   - Orders and payments via Stripe
   - Image serving
 - **Removed newsletter subscription feature** (March 14, 2024):
@@ -139,8 +147,9 @@ If you're picking up this project, here's what you should focus on next:
    - Add logo files (favicon.ico, logo192.png, logo512.png)
 
 4. **Frontend Updates**:
-   - Remove any newsletter subscription UI components
-   - Ensure consistency with backend changes
+   - Ensure all components are consistent with database changes
+   - Verify the social media link tree on the contact page
+   - Test static certification display
 
 5. **Testing**:
    - Test form submissions
