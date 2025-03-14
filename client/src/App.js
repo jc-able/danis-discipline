@@ -13,6 +13,7 @@ import ContactPage from './pages/ContactPage';
 import CheckoutSuccessPage from './pages/CheckoutSuccessPage';
 import CheckoutCancelPage from './pages/CheckoutCancelPage';
 import NotFoundPage from './pages/NotFoundPage';
+import TestCheckoutPage from './pages/TestCheckoutPage';
 
 const MainContainer = styled.div`
   min-height: 100vh;
@@ -39,6 +40,7 @@ function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/checkout-success" element={<CheckoutSuccessPage />} />
           <Route path="/checkout-cancel" element={<CheckoutCancelPage />} />
+          <Route path="/test-checkout" element={<TestCheckoutPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </ContentWrapper>
