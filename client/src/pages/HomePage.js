@@ -6,14 +6,15 @@ import Button from '../components/Button';
 // Styled components for the home page
 const HeroSection = styled.div`
   height: 85vh;
-  background-color: var(--black);
-  color: var(--white);
+  background-color: var(--teal);
+  color: var(--black);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
   position: relative;
+  overflow: hidden; /* Ensure polaroids don't cause scrollbars */
 `;
 
 const HeroTitle = styled.h1`
@@ -51,6 +52,68 @@ const DownArrow = styled.div`
     60% {
       transform: translateY(-10px);
     }
+  }
+`;
+
+// Polaroid styled components
+const Polaroid = styled.div`
+  background: white;
+  padding: 10px 10px 30px 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  transform: ${props => props.rotation || 'rotate(0deg)'};
+  z-index: 1;
+  width: 200px;
+  
+  /* First tape piece */
+  &::before {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 15px;
+    background-color: rgba(255, 255, 255, 0.7);
+    top: ${props => props.tapeTop || '-5px'};
+    left: ${props => props.tapeLeft || '80px'};
+    transform: ${props => props.tapeRotation || 'rotate(0deg)'};
+    z-index: 2;
+    opacity: 0.8;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Second tape piece for more realism */
+  &::after {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 15px;
+    background-color: rgba(255, 255, 255, 0.7);
+    bottom: ${props => props.tapeBottom || '30px'};
+    right: ${props => props.tapeRight || '-5px'};
+    transform: ${props => props.secondTapeRotation || 'rotate(45deg)'};
+    z-index: 2;
+    opacity: 0.8;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+  
+  @media (max-width: 768px) {
+    width: 150px;
+    display: ${props => props.hideOnMobile ? 'none' : 'block'};
+  }
+`;
+
+const PolaroidImage = styled.div`
+  width: 100%;
+  height: 180px;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+  font-size: 0.9rem;
+  text-align: center;
+  
+  @media (max-width: 768px) {
+    height: 130px;
   }
 `;
 
@@ -140,8 +203,57 @@ const FeatureItem = styled.li`
 const HomePage = () => {
   return (
     <>
-      {/* Hero Section */}
+      {/* Hero Section with Polaroids */}
       <HeroSection>
+        {/* Polaroid 1 - Left side */}
+        <Polaroid 
+          rotation="rotate(-8deg)" 
+          tapeTop="-5px" 
+          tapeLeft="80px" 
+          tapeBottom="40px"
+          tapeRight="-15px"
+          tapeRotation="rotate(0deg)"
+          secondTapeRotation="rotate(90deg)"
+          style={{ top: '25%', left: '5%' }}
+        >
+          <PolaroidImage>
+            No documents found in Photo1 collection
+          </PolaroidImage>
+        </Polaroid>
+        
+        {/* Polaroid 2 - Top right */}
+        <Polaroid 
+          rotation="rotate(5deg)" 
+          tapeTop="-5px" 
+          tapeLeft="80px" 
+          tapeBottom="50px"
+          tapeRight="-15px"
+          tapeRotation="rotate(-5deg)"
+          secondTapeRotation="rotate(90deg)"
+          style={{ top: '15%', right: '8%' }}
+        >
+          <PolaroidImage>
+            Photo 2
+          </PolaroidImage>
+        </Polaroid>
+        
+        {/* Polaroid 3 - Bottom right */}
+        <Polaroid 
+          rotation="rotate(-5deg)" 
+          tapeTop="-5px" 
+          tapeLeft="60px" 
+          tapeBottom="40px"
+          tapeRight="-10px"
+          tapeRotation="rotate(5deg)"
+          secondTapeRotation="rotate(85deg)"
+          style={{ bottom: '20%', right: '10%' }}
+          hideOnMobile={true}
+        >
+          <PolaroidImage>
+            Photo 3
+          </PolaroidImage>
+        </Polaroid>
+        
         <HeroTitle>Dani's Discipline</HeroTitle>
         <HeroSubtitle>Achieve Goals Without Limits</HeroSubtitle>
         <DownArrow>↓</DownArrow>
@@ -153,8 +265,9 @@ const HomePage = () => {
           LET'S WORK <span className="italic">together</span>
         </Section.Title>
         <p style={{ textAlign: 'center', maxWidth: '800px', margin: '0 auto 3rem' }}>
-          Discover personalized coaching and fitness plans designed to help you achieve your goals.
-          Whether you're looking for one-on-one guidance or self-directed programs, we have options to fit your needs.
+          WHETHER YOU ARE LOOKING FOR COMPLETE 1:1 COACHING, A CUSTOM
+          INDEPENDENT PLAN, OR A WORKOUT PROGRAM TO PERFORM, I'VE GOT YOU
+          COVERED.
         </p>
         
         <ServicesGrid>
