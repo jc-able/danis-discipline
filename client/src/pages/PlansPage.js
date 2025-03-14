@@ -2,8 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import Section from '../components/Section';
 import Button from '../components/Button';
-import { getIndependentPlans, subscribeToNewsletter } from '../services/supabaseClient';
-import { useForm } from 'react-hook-form';
+import { getIndependentPlans } from '../services/supabaseClient';
 // Import Font Awesome components
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
@@ -325,36 +324,6 @@ const EmptyCategory = styled.div`
   }
 `;
 
-const SubscriptionForm = styled.form`
-  max-width: 500px;
-  margin: 0 auto;
-  padding: 2.5rem;
-  background-color: var(--white);
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-`;
-
-const SubscriptionInput = styled.input`
-  width: 100%;
-  padding: 0.9rem 1rem;
-  margin-bottom: 1.2rem;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 50px;
-  font-family: 'Arial', sans-serif;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  
-  &:focus {
-    outline: none;
-    border-color: var(--teal);
-    box-shadow: 0 0 0 3px rgba(0, 173, 168, 0.2);
-  }
-  
-  &::placeholder {
-    color: #aaa;
-  }
-`;
-
 const FormMessage = styled.div`
   margin-top: 1rem;
   padding: 0.8rem;
@@ -391,15 +360,12 @@ const getCategoryIcon = (category, title) => {
 const PlansPage = () => {
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
   const [activeCategory, setActiveCategory] = useState('all');
   
   // Refs for scrolling to categories
   const groceryRef = useRef(null);
   const macroRef = useRef(null);
   const nutritionRef = useRef(null);
-  
-  const { register, handleSubmit, reset, formState: { errors } } = useForm();
   
   useEffect(() => {
     const fetchPlans = async () => {
@@ -474,21 +440,6 @@ const PlansPage = () => {
       macroRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } else if (category === 'nutrition' && nutritionRef.current) {
       nutritionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
-  
-  const onSubscribe = async (data) => {
-    try {
-      const result = await subscribeToNewsletter(data.name, data.email);
-      if (result.success) {
-        setSubmitSuccess(true);
-        reset();
-        setTimeout(() => {
-          setSubmitSuccess(false);
-        }, 5000);
-      }
-    } catch (error) {
-      console.error('Error subscribing to newsletter:', error);
     }
   };
   

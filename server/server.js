@@ -34,7 +34,6 @@ app.use(limiter);
 const coachingRoutes = require('./routes/coaching');
 const plansRoutes = require('./routes/plans');
 const contactRoutes = require('./routes/contact');
-// const newsletterRoutes = require('./routes/newsletter');
 const ordersRoutes = require('./routes/orders');
 const stripeRoutes = require('./routes/stripe');
 const imagesRoutes = require('./routes/images');
@@ -43,7 +42,6 @@ const imagesRoutes = require('./routes/images');
 app.use('/api/coaching-packages', coachingRoutes);
 app.use('/api/independent-plans', plansRoutes);
 app.use('/api/contact', contactRoutes);
-// app.use('/api/subscribe', newsletterRoutes);
 app.use('/api/display-orders', ordersRoutes);
 app.use('/api', stripeRoutes); // Contains create-checkout-session, webhook, etc.
 app.use('/api/images', imagesRoutes);

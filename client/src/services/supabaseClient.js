@@ -68,23 +68,6 @@ export const getCertifications = async () => {
 };
 
 /**
- * Subscribe to newsletter
- */
-export const subscribeToNewsletter = async (name, email) => {
-  try {
-    const { data, error } = await supabase
-      .from('newsletter_subscribers')
-      .insert([{ name, email, active: true }]);
-
-    if (error) throw error;
-    return { success: true, data };
-  } catch (error) {
-    console.error('Error subscribing to newsletter:', error);
-    return { success: false, error: error.message };
-  }
-};
-
-/**
  * Submit contact form
  */
 export const submitContactForm = async (formData) => {
