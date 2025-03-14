@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Section from '../components/Section';
-import Button from '../components/Button';
 import { FiMail, FiPhone, FiInstagram } from 'react-icons/fi';
-import { sendContactForm } from '../services/supabaseClient';
-import { useForm } from 'react-hook-form';
+import { FaGithub, FaLinkedin, FaFacebook, FaYoutube, FaTiktok } from 'react-icons/fa';
 
 // Create a component for white text with pink shadow (like "start?")
 const TealPinkEffect = styled.span`
@@ -63,28 +61,37 @@ const HeaderSubtitle = styled.p`
   }
 `;
 
-const ContactGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 3rem;
-  
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
+const SectionTitle = styled.h2`
+  font-family: 'Georgia', serif;
+  font-weight: 600;
+  color: var(--black);
+  margin-bottom: 1.5rem;
+  text-align: center;
 `;
 
-const ContactInfo = styled.div`
-  background-color: var(--pink);
-  color: var(--white);
+// Link tree styled components
+const LinkTreeContainer = styled.div`
+  max-width: 600px;
+  margin: 0 auto;
   padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
 
-const InfoItem = styled.div`
+const LinkCard = styled.a`
   display: flex;
   align-items: center;
-  margin-bottom: 1.5rem;
+  padding: 1.2rem 1.5rem;
+  background-color: ${props => props.bgColor || 'var(--teal)'};
+  color: ${props => props.textColor || 'white'};
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 7px 12px rgba(0, 0, 0, 0.15);
+  }
   
   svg {
     font-size: 1.5rem;
@@ -92,78 +99,78 @@ const InfoItem = styled.div`
   }
 `;
 
-const ContactForm = styled.form`
-  background-color: var(--light-gray);
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+const LinkIcon = styled.div`
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
 `;
 
-const FormInput = styled.input`
-  width: 100%;
-  padding: 0.75rem;
-  margin-bottom: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-family: 'Arial', sans-serif;
-`;
-
-const FormTextarea = styled.textarea`
-  width: 100%;
-  padding: 0.75rem;
-  margin-bottom: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  min-height: 150px;
-  font-family: 'Arial', sans-serif;
-`;
-
-const FormLabel = styled.label`
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: bold;
-  font-family: 'Georgia', serif;
-`;
-
-const SectionTitle = styled.h2`
-  font-family: 'Georgia', serif;
-  font-weight: 600;
-  color: var(--black);
-  margin-bottom: 1.5rem;
-`;
-
-const FormMessage = styled.div`
-  margin-top: 1rem;
-  padding: 0.5rem;
-  text-align: center;
-  border-radius: 4px;
-  color: ${props => props.error ? '#e74c3c' : '#2ecc71'};
-  background-color: ${props => props.error ? '#fadbd8' : '#d5f5e3'};
+const LinkText = styled.div`
+  flex: 1;
+  
+  h3 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.1rem;
+  }
+  
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.9;
+  }
 `;
 
 const ContactPage = () => {
-    const { register, handleSubmit, formState: { errors }, reset } = useForm();
-    const [submitting, setSubmitting] = useState(false);
-    const [formMessage, setFormMessage] = useState('');
-    const [formError, setFormError] = useState(false);
-    
-    const onSubmit = async (data) => {
-        setSubmitting(true);
-        setFormMessage('');
-        setFormError(false);
-        
-        try {
-            await sendContactForm(data);
-            setFormMessage('Thank you for your message! We will get back to you soon.');
-            reset();
-        } catch (error) {
-            setFormError(true);
-            setFormMessage('There was an error sending your message. Please try again.');
-            console.error(error);
-        } finally {
-            setSubmitting(false);
+    // Social media and contact links
+    const links = [
+        {
+            name: 'Email',
+            description: 'Send me an email directly',
+            icon: <FiMail />,
+            url: 'mailto:info@danisdiscipline.com',
+            bgColor: 'var(--pink)'
+        },
+        {
+            name: 'Instagram',
+            description: '@danisdiscipline',
+            icon: <FiInstagram />,
+            url: 'https://instagram.com/danisdiscipline',
+            bgColor: '#E1306C'
+        },
+        {
+            name: 'Facebook',
+            description: 'Connect with me on Facebook',
+            icon: <FaFacebook />,
+            url: 'https://facebook.com/danisdiscipline',
+            bgColor: '#4267B2'
+        },
+        {
+            name: 'TikTok',
+            description: 'Follow my fitness content',
+            icon: <FaTiktok />,
+            url: 'https://tiktok.com/@danisdiscipline',
+            bgColor: '#000000'
+        },
+        {
+            name: 'YouTube',
+            description: 'Watch my workout tutorials',
+            icon: <FaYoutube />,
+            url: 'https://youtube.com/c/danisdiscipline',
+            bgColor: '#FF0000'
+        },
+        {
+            name: 'LinkedIn',
+            description: 'Connect professionally',
+            icon: <FaLinkedin />,
+            url: 'https://linkedin.com/in/danisdiscipline',
+            bgColor: '#0077B5'
         }
-    };
+    ];
     
     return (
         <>
@@ -172,100 +179,34 @@ const ContactPage = () => {
                     <HeaderTitle>
                         GET IN <TealPinkEffect data-text="touch">touch</TealPinkEffect>
                     </HeaderTitle>
-                    <HeaderSubtitle>Let's start the conversation</HeaderSubtitle>
+                    <HeaderSubtitle>Let's connect through social media</HeaderSubtitle>
                 </div>
             </HeaderSection>
             
             <Section>
                 <div className="container">
-                    <ContactGrid>
-                        <ContactInfo>
-                            <SectionTitle style={{ color: 'white' }}>Get In Touch</SectionTitle>
-                            <p style={{ marginBottom: '2rem' }}>
-                                Have questions about my coaching services or training plans? 
-                                Reach out and I'll get back to you as soon as possible.
-                            </p>
-                            
-                            <InfoItem>
-                                <FiMail />
-                                <div>
-                                    <strong>Email</strong>
-                                    <p>info@danisdiscipline.com</p>
-                                </div>
-                            </InfoItem>
-                            
-                            <InfoItem>
-                                <FiPhone />
-                                <div>
-                                    <strong>Phone</strong>
-                                    <p>(123) 456-7890</p>
-                                </div>
-                            </InfoItem>
-                            
-                            <InfoItem>
-                                <FiInstagram />
-                                <div>
-                                    <strong>Instagram</strong>
-                                    <p>@danisdiscipline</p>
-                                </div>
-                            </InfoItem>
-                        </ContactInfo>
-                        
-                        <ContactForm onSubmit={handleSubmit(onSubmit)}>
-                            <SectionTitle>Send a Message</SectionTitle>
-                            
-                            <div>
-                                <FormLabel>Name</FormLabel>
-                                <FormInput 
-                                    type="text" 
-                                    placeholder="Your Name" 
-                                    {...register('name', { required: true })}
-                                />
-                                {errors.name && <span style={{ color: 'red' }}>Name is required</span>}
-                            </div>
-                            
-                            <div>
-                                <FormLabel>Email</FormLabel>
-                                <FormInput 
-                                    type="email" 
-                                    placeholder="Your Email" 
-                                    {...register('email', { 
-                                        required: true, 
-                                        pattern: /^\S+@\S+$/i 
-                                    })}
-                                />
-                                {errors.email?.type === 'required' && <span style={{ color: 'red' }}>Email is required</span>}
-                                {errors.email?.type === 'pattern' && <span style={{ color: 'red' }}>Please enter a valid email</span>}
-                            </div>
-                            
-                            <div>
-                                <FormLabel>Subject</FormLabel>
-                                <FormInput 
-                                    type="text" 
-                                    placeholder="Subject" 
-                                    {...register('subject', { required: true })}
-                                />
-                                {errors.subject && <span style={{ color: 'red' }}>Subject is required</span>}
-                            </div>
-                            
-                            <div>
-                                <FormLabel>Message</FormLabel>
-                                <FormTextarea 
-                                    placeholder="Your Message" 
-                                    {...register('message', { required: true })}
-                                />
-                                {errors.message && <span style={{ color: 'red' }}>Message is required</span>}
-                            </div>
-                            
-                            <Button type="submit" variant="primary" disabled={submitting}>
-                                {submitting ? 'Sending...' : 'Send Message'}
-                            </Button>
-                            
-                            {formMessage && (
-                                <FormMessage error={formError}>{formMessage}</FormMessage>
-                            )}
-                        </ContactForm>
-                    </ContactGrid>
+                    <SectionTitle>Connect With Me</SectionTitle>
+                    <p style={{ textAlign: 'center', marginBottom: '2rem' }}>
+                        Follow me on social media for updates, tips, and to get in touch!
+                    </p>
+                    
+                    <LinkTreeContainer>
+                        {links.map((link, index) => (
+                            <LinkCard 
+                                key={index} 
+                                href={link.url} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                bgColor={link.bgColor}
+                            >
+                                <LinkIcon>{link.icon}</LinkIcon>
+                                <LinkText>
+                                    <h3>{link.name}</h3>
+                                    <p>{link.description}</p>
+                                </LinkText>
+                            </LinkCard>
+                        ))}
+                    </LinkTreeContainer>
                 </div>
             </Section>
         </>

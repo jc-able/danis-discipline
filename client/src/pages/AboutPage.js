@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Section from '../components/Section';
 import Button from '../components/Button';
-import { getCertifications } from '../services/supabaseClient';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCertificate } from '@fortawesome/free-solid-svg-icons';
 
@@ -176,26 +175,8 @@ const Loader = styled.div`
 `;
 
 const AboutPage = () => {
-  const [certifications, setCertifications] = useState([]);
-  const [loading, setLoading] = useState(true);
-  
-  useEffect(() => {
-    const fetchCertifications = async () => {
-      try {
-        const data = await getCertifications();
-        setCertifications(data);
-      } catch (error) {
-        console.error('Error fetching certifications:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchCertifications();
-  }, []);
-  
-  // Fallback certifications if fetching fails or none exist in database
-  const fallbackCertifications = [
+  // Static certifications list - no need to fetch from database
+  const certifications = [
     { 
       id: 1, 
       title: "Certified Personal Trainer (CPT)", 
@@ -221,8 +202,6 @@ const AboutPage = () => {
       year: 2021
     }
   ];
-  
-  const displayCertifications = certifications.length > 0 ? certifications : fallbackCertifications;
   
   return (
     <>
@@ -265,7 +244,7 @@ const AboutPage = () => {
         <div className="container">
           <SectionTitle>My Certifications</SectionTitle>
           <CertificationsGrid>
-            {displayCertifications.map((cert) => (
+            {certifications.map((cert) => (
               <CertificationCard key={cert.id}>
                 <IconWrapper>
                   <FontAwesomeIcon icon={faCertificate} />

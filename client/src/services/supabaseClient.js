@@ -50,52 +50,6 @@ export const getIndependentPlans = async () => {
 };
 
 /**
- * Fetch all certifications
- */
-export const getCertifications = async () => {
-  try {
-    const { data, error } = await supabase
-      .from('certifications')
-      .select('*')
-      .order('year', { ascending: false });
-
-    if (error) throw error;
-    return data;
-  } catch (error) {
-    console.error('Error fetching certifications:', error);
-    return [];
-  }
-};
-
-/**
- * Submit contact form
- */
-export const submitContactForm = async (formData) => {
-  try {
-    const { data, error } = await supabase
-      .from('contact_messages')
-      .insert([{ 
-        name: formData.name, 
-        email: formData.email, 
-        subject: formData.subject, 
-        message: formData.message,
-        isRead: false
-      }]);
-
-    if (error) throw error;
-    return { success: true, data };
-  } catch (error) {
-    console.error('Error submitting contact form:', error);
-    return { success: false, error: error.message };
-  }
-};
-
-/**
- * Alternative name for submitContactForm to match updated UI
- */
-export const sendContactForm = submitContactForm;
-
-/**
  * Get order details
  */
 export const getOrderDetails = async (sessionId) => {

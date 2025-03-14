@@ -2,32 +2,7 @@
 const supabaseService = require('../services/supabase');
 
 /**
- * Get all polaroid images
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- * @returns {Object} - JSON response with polaroid images
- */
-const getPolaroids = async (req, res) => {
-  try {
-    const { data, error } = await supabaseService.supabase
-      .from('polaroids')
-      .select('*')
-      .order('created_at', { ascending: false });
-    
-    if (error) throw error;
-    
-    return res.status(200).json({ success: true, data });
-  } catch (err) {
-    console.error('Error fetching polaroid images:', err);
-    return res.status(500).json({ 
-      success: false, 
-      message: 'Failed to fetch polaroid images' 
-    });
-  }
-};
-
-/**
- * Get all testimonial images
+ * Get testimonial images
  * @param {Object} req - Express request object
  * @param {Object} res - Express response object
  * @returns {Object} - JSON response with testimonial images
@@ -35,9 +10,9 @@ const getPolaroids = async (req, res) => {
 const getTestimonials = async (req, res) => {
   try {
     const { data, error } = await supabaseService.supabase
-      .from('testimonial_images')
+      .from('testimonials')
       .select('*')
-      .order('display_order', { ascending: true });
+      .order('display_order');
     
     if (error) throw error;
     
@@ -52,49 +27,49 @@ const getTestimonials = async (req, res) => {
 };
 
 /**
- * Get a public URL for an image
- * @param {Object} req - Express request object
+ * Generate public URL for an image
+ * @param {Object} req - Express request object with path query param
  * @param {Object} res - Express response object
- * @returns {Object} - JSON response with image URL
+ * @returns {Object} - JSON response with public URL
  */
 const getImageUrl = async (req, res) => {
   try {
-    const { bucket, filename } = req.params;
+    const { path } = req.query;
     
-    // Validate allowed buckets for security
-    const allowedBuckets = ['polaroids', 'testimonials', 'products', 'content'];
-    if (!allowedBuckets.includes(bucket)) {
+    if (!path) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid bucket specified'
+        message: 'Image path is required'
       });
     }
     
-    // Get the URL for the image
-    const publicUrl = supabaseService.getPublicUrl(bucket, filename);
+    // Generate public URL
+    const { data } = supabaseService.supabase
+      .storage
+      .from('images')
+      .getPublicUrl(path);
     
-    if (!publicUrl) {
+    if (!data || !data.publicUrl) {
       return res.status(404).json({
         success: false,
-        message: 'Image not found'
+        message: 'Image not found or URL generation failed'
       });
     }
     
-    return res.status(200).json({ 
-      success: true, 
-      url: publicUrl 
+    return res.status(200).json({
+      success: true,
+      url: data.publicUrl
     });
   } catch (err) {
-    console.error('Error getting image URL:', err);
+    console.error('Error generating image URL:', err);
     return res.status(500).json({ 
       success: false, 
-      message: 'Failed to get image URL' 
+      message: 'Failed to generate image URL' 
     });
   }
 };
 
 module.exports = {
-  getPolaroids,
   getTestimonials,
   getImageUrl
 };
