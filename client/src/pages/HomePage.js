@@ -503,33 +503,32 @@ const HomePage = () => {
       {/* Services Section - White Background */}
       <Section background="white" padding="5rem 0">
         <Section.Title align="center" style={{ fontFamily: "'Georgia', serif", fontWeight: "700" }}>
-          LET'S WORK <PinkTealEffect data-text="together">together</PinkTealEffect>
+          LET'S PLAN <PinkTealEffect data-text="together">together</PinkTealEffect>
         </Section.Title>
         <p style={{ textAlign: 'center', maxWidth: '800px', margin: '0 auto 3rem', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '0.9rem', fontFamily: "'Georgia', serif", fontWeight: "700" }}>
-          WHETHER YOU ARE LOOKING FOR COMPLETE 1:1 COACHING, A CUSTOM
-          INDEPENDENT PLAN, OR A WORKOUT PROGRAM TO PERFORM, I'VE GOT YOU
-          COVERED.
+          EXPLORE MY SELECTION OF GROCERY GUIDES AND MACRO GUIDES TO HELP YOU 
+          ACHIEVE YOUR NUTRITION AND FITNESS GOALS AT YOUR OWN PACE.
         </p>
         
         <ServicesGrid>
           <ServiceCard>
             <ServiceImage>IMAGE PLACEHOLDER</ServiceImage>
-            <ServiceTitle>1:1 COACHING</ServiceTitle>
-            <p>Personalized fitness and nutrition guidance tailored to your specific goals and needs.</p>
+            <ServiceTitle>GROCERY GUIDES</ServiceTitle>
+            <p>Comprehensive grocery shopping guides to help you make healthier food choices and stay on track.</p>
             <Button to="/plans" style={{ marginTop: '1rem', fontFamily: "'Georgia', serif", fontWeight: "700" }}>Learn More</Button>
           </ServiceCard>
           
           <ServiceCard>
             <ServiceImage>IMAGE PLACEHOLDER</ServiceImage>
-            <ServiceTitle>INDEPENDENT PLANS</ServiceTitle>
-            <p>Self-guided fitness and nutrition plans for those who prefer to work at their own pace.</p>
+            <ServiceTitle>MACRO GUIDES</ServiceTitle>
+            <p>Learn how to track and optimize your macronutrients for your specific fitness and health goals.</p>
             <Button to="/plans" style={{ marginTop: '1rem', fontFamily: "'Georgia', serif", fontWeight: "700" }}>Learn More</Button>
           </ServiceCard>
           
           <ServiceCard>
             <ServiceImage>IMAGE PLACEHOLDER</ServiceImage>
-            <ServiceTitle>WORKOUT PROGRAMS</ServiceTitle>
-            <p>Structured workout programs designed to help you build strength, endurance, and overall fitness.</p>
+            <ServiceTitle>CUSTOM NUTRITION PLANS</ServiceTitle>
+            <p>Personalized nutrition strategies that fit your lifestyle and dietary preferences.</p>
             <Button to="/plans" style={{ marginTop: '1rem', fontFamily: "'Georgia', serif", fontWeight: "700" }}>Learn More</Button>
           </ServiceCard>
         </ServicesGrid>
@@ -561,19 +560,19 @@ const HomePage = () => {
           <FeatureImage>IMAGE PLACEHOLDER</FeatureImage>
           <FeatureContent>
             <Section.Title style={{ fontFamily: "'Georgia', serif", fontWeight: "700" }}>
-              1:1 <PinkTealEffect data-text="coaching">coaching</PinkTealEffect>
+              Nutrition <PinkTealEffect data-text="Guides">Guides</PinkTealEffect>
             </Section.Title>
             <p style={{ fontFamily: "'Georgia', serif" }}>
-              Work directly with a certified fitness and nutrition coach to create a customized plan that fits your lifestyle and helps you achieve your goals.
+              Access comprehensive nutrition resources designed to help you make better food choices and understand how to fuel your body effectively.
             </p>
             
             <FeatureList style={{ fontFamily: "'Georgia', serif", fontWeight: "700" }}>
-              <FeatureItem>12 WEEKS LONG</FeatureItem>
-              <FeatureItem>1:1 PERSONAL COACH</FeatureItem>
-              <FeatureItem>PERSONALIZED NUTRITION PLAN</FeatureItem>
-              <FeatureItem>CUSTOM WORKOUT ROUTINE</FeatureItem>
-              <FeatureItem>WEEKLY CHECK-INS</FeatureItem>
-              <FeatureItem>ONGOING SUPPORT</FeatureItem>
+              <FeatureItem>DETAILED GROCERY LISTS</FeatureItem>
+              <FeatureItem>MACRO TRACKING TUTORIALS</FeatureItem>
+              <FeatureItem>MEAL PLANNING TEMPLATES</FeatureItem>
+              <FeatureItem>NUTRITIONAL BREAKDOWN</FeatureItem>
+              <FeatureItem>DIET FLEXIBILITY OPTIONS</FeatureItem>
+              <FeatureItem>BUDGET-FRIENDLY ALTERNATIVES</FeatureItem>
             </FeatureList>
             
             <Button to="/plans" style={{ fontFamily: "'Georgia', serif", fontWeight: "700" }}>LEARN MORE</Button>
