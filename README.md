@@ -48,7 +48,7 @@ For detailed specifications, see the [Product Requirements Document](docs/PRD.md
 - ✅ Backend API implementation for core features
 
 ### In Progress / Remaining Tasks
-- ⏳ Actual image assets (currently using placeholders)
+- ⏳ Images will be retrieved from the Supabase database
 - ⏳ Supabase database table setup:
   - `independent_plans` table
   - `display_orders` table
@@ -143,7 +143,7 @@ If you're picking up this project, here's what you should focus on next:
    - Set up row-level security policies
 
 3. **Image Assets**:
-   - Replace placeholder images with actual assets
+   - Ensure all images are properly retrieved from the Supabase database
    - Add logo files (favicon.ico, logo192.png, logo512.png)
 
 4. **Frontend Updates**:
