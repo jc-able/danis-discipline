@@ -670,65 +670,6 @@ const PlansPage = () => {
           )}
         </div>
       </Section>
-      
-      <Section backgroundColor="var(--teal)">
-        <div className="container">
-          <SectionTitle style={{ color: 'white' }}>Subscribe for Nutrition Tips</SectionTitle>
-          <p style={{ 
-            textAlign: 'center', 
-            maxWidth: '600px', 
-            margin: '0 auto 2rem', 
-            color: 'white',
-            lineHeight: '1.8',
-            fontSize: '1.1rem'
-          }}>
-            Join our newsletter to receive free nutrition tips, healthy recipes, and exclusive discounts on our guides.
-          </p>
-          
-          <SubscriptionForm onSubmit={handleSubmit(onSubscribe)}>
-            <SubscriptionInput 
-              type="text" 
-              placeholder="Your Name" 
-              {...register('name', { required: true })}
-            />
-            {errors.name && <span style={{ color: 'red', marginBottom: '1rem', display: 'block' }}>Name is required</span>}
-            
-            <SubscriptionInput 
-              type="email" 
-              placeholder="Your Email" 
-              {...register('email', { 
-                required: true, 
-                pattern: /^\S+@\S+$/i 
-              })}
-            />
-            {errors.email?.type === 'required' && <span style={{ color: 'red', marginBottom: '1rem', display: 'block' }}>Email is required</span>}
-            {errors.email?.type === 'pattern' && <span style={{ color: 'red', marginBottom: '1rem', display: 'block' }}>Please enter a valid email</span>}
-            
-            <Button 
-              type="submit" 
-              variant="primary" 
-              fullWidth 
-              disabled={submitSuccess}
-              style={{ 
-                borderRadius: '50px', 
-                padding: '0.9rem',
-                fontSize: '1.1rem',
-                fontWeight: 'bold',
-                boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
-                transition: 'all 0.3s ease'
-              }}
-            >
-              {submitSuccess ? 'Subscribed!' : 'Subscribe Now'}
-            </Button>
-            
-            {submitSuccess && (
-              <FormMessage>
-                Thank you for subscribing to our newsletter!
-              </FormMessage>
-            )}
-          </SubscriptionForm>
-        </div>
-      </Section>
     </>
   );
 };
