@@ -37,7 +37,7 @@ const TealPinkEffect = styled.span`
 `;
 
 const HeaderSection = styled.div`
-  background: linear-gradient(135deg, var(--teal) 0%, #1a9c98 100%);
+  background: var(--teal);
   color: var(--black);
   padding: 5rem 0;
   text-align: center;
@@ -45,14 +45,7 @@ const HeaderSection = styled.div`
   overflow: hidden;
   
   &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(circle at 70% 20%, rgba(255, 105, 180, 0.15) 0%, transparent 60%);
-    pointer-events: none;
+    content: none;
   }
 `;
 
@@ -91,10 +84,9 @@ const CategoryNav = styled.div`
   position: sticky;
   top: 0;
   z-index: 100;
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: var(--black);
   padding: 1rem 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  backdrop-filter: blur(5px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   
   @media (max-width: 768px) {
     flex-direction: column;
@@ -103,9 +95,9 @@ const CategoryNav = styled.div`
 `;
 
 const CategoryButton = styled.button`
-  background: ${props => props.active ? 'linear-gradient(135deg, var(--teal) 0%, var(--pink) 100%)' : 'transparent'};
-  color: ${props => props.active ? 'white' : 'var(--black)'};
-  border: 2px solid ${props => props.active ? 'transparent' : 'var(--teal)'};
+  background: ${props => props.active ? 'var(--pink)' : 'transparent'};
+  color: white;
+  border: 2px solid ${props => props.active ? 'var(--pink)' : 'var(--teal)'};
   padding: 0.75rem 1.5rem;
   margin: 0 0.5rem 1rem;
   border-radius: 50px;
@@ -116,9 +108,7 @@ const CategoryButton = styled.button`
   box-shadow: ${props => props.active ? '0 4px 10px rgba(0, 0, 0, 0.15)' : 'none'};
   
   &:hover {
-    background: ${props => props.active 
-      ? 'linear-gradient(135deg, var(--teal) 0%, var(--pink) 100%)' 
-      : 'linear-gradient(135deg, rgba(0, 173, 168, 0.1) 0%, rgba(255, 105, 180, 0.1) 100%)'};
+    background: ${props => props.active ? 'var(--pink)' : 'var(--teal)'};
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   }
@@ -168,10 +158,10 @@ const PlanCard = styled.div`
     height: 6px;
     background: ${props => 
       props.category === 'grocery' 
-        ? 'linear-gradient(135deg, #40E0D0 0%, #20C0B0 100%)' 
+        ? '#40E0D0' 
         : props.category === 'macro' 
-        ? 'linear-gradient(135deg, #FF69B4 0%, #FF1493 100%)' 
-        : 'linear-gradient(135deg, #9370DB 0%, #8A2BE2 100%)'};
+        ? '#FF69B4' 
+        : '#9370DB'};
   }
   
   &:hover {
@@ -186,10 +176,10 @@ const CategoryLabel = styled.div`
   right: 10px;
   background: ${props => 
     props.category === 'grocery' 
-      ? 'linear-gradient(135deg, #40E0D0 0%, #20C0B0 100%)' 
+      ? '#40E0D0' 
       : props.category === 'macro' 
-      ? 'linear-gradient(135deg, #FF69B4 0%, #FF1493 100%)' 
-      : 'linear-gradient(135deg, #9370DB 0%, #8A2BE2 100%)'};
+      ? '#FF69B4' 
+      : '#9370DB'};
   color: white;
   padding: 0.25rem 0.75rem;
   font-size: 0.8rem;
@@ -287,20 +277,11 @@ const CategoryTitle = styled.h2`
     height: 2px;
     background: ${props => 
       props.category === 'grocery' 
-        ? 'linear-gradient(to right, transparent, #40E0D0)' 
+        ? '#40E0D0'
         : props.category === 'macro' 
-        ? 'linear-gradient(to right, transparent, #FF69B4)' 
-        : 'linear-gradient(to right, transparent, #9370DB)'};
+        ? '#FF69B4'
+        : '#9370DB'};
     margin: 0 1rem;
-  }
-  
-  &::after {
-    background: ${props => 
-      props.category === 'grocery' 
-        ? 'linear-gradient(to left, transparent, #40E0D0)' 
-        : props.category === 'macro' 
-        ? 'linear-gradient(to left, transparent, #FF69B4)' 
-        : 'linear-gradient(to left, transparent, #9370DB)'};
   }
   
   @media (max-width: 768px) {
@@ -323,7 +304,7 @@ const CategoryDescription = styled.p`
 const EmptyCategory = styled.div`
   text-align: center;
   padding: 4rem 2rem;
-  background: linear-gradient(135deg, #f9f9f9 0%, #f3f3f3 100%);
+  background: #f9f9f9;
   border-radius: 12px;
   margin: 2rem 0;
   border: 1px dashed #ddd;
@@ -686,7 +667,7 @@ const PlansPage = () => {
         </div>
       </Section>
       
-      <Section backgroundColor="linear-gradient(135deg, var(--teal) 0%, #1a9c98 100%)">
+      <Section backgroundColor="var(--teal)">
         <div className="container">
           <SectionTitle style={{ color: 'white' }}>Subscribe for Nutrition Tips</SectionTitle>
           <p style={{ 
