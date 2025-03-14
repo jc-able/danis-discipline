@@ -4,6 +4,10 @@ import Section from '../components/Section';
 import Button from '../components/Button';
 import { FiArrowDown } from 'react-icons/fi';
 import { getHomePolaroids, supabase } from '../services/supabaseClient';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { 
+  faShoppingBasket, faCalculator, faUtensils
+} from '@fortawesome/free-solid-svg-icons';
 
 // Styled components for the home page
 const HeroSection = styled.div`
@@ -190,33 +194,89 @@ const ServicesGrid = styled.div`
 `;
 
 const ServiceCard = styled.div`
-  background-color: var(--pink);
-  padding: 2rem;
-  border-radius: 4px;
+  padding: 2.5rem;
+  border-radius: 12px;
+  background-color: var(--white);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  overflow: hidden;
   text-align: center;
-  transition: transform 0.3s ease;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: ${props => 
+      props.category === 'grocery' 
+        ? '#40E0D0' 
+        : props.category === 'macro' 
+        ? '#FF69B4' 
+        : '#9370DB'};
+  }
   
   &:hover {
     transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  }
+`;
+
+const CategoryLabel = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: ${props => 
+    props.category === 'grocery' 
+      ? '#40E0D0' 
+      : props.category === 'macro' 
+      ? '#FF69B4' 
+      : '#9370DB'};
+  color: white;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.8rem;
+  border-radius: 50px;
+  font-weight: bold;
+  text-transform: uppercase;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+`;
+
+const IconWrapper = styled.div`
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  font-size: 1.8rem;
+  color: ${props => 
+    props.category === 'grocery' 
+      ? '#40E0D0' 
+      : props.category === 'macro' 
+      ? '#FF69B4' 
+      : '#9370DB'};
+  opacity: 0.9;
+  transition: all 0.3s ease;
+  
+  ${ServiceCard}:hover & {
+    transform: scale(1.1);
   }
 `;
 
 const ServiceImage = styled.div`
-  height: 150px;
-  background-color: #d371be; /* Placeholder for image */
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--white);
-  font-weight: bold;
+  display: none; /* Hiding the image placeholder */
 `;
 
 const ServiceTitle = styled.h3`
-  margin-bottom: 1rem;
   font-size: 1.5rem;
+  margin: 2.5rem 0 1rem;
   font-family: 'Georgia', serif;
-  font-weight: 700;
+  font-weight: 600;
+  color: var(--black);
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.05);
 `;
 
 const FeatureGrid = styled.div`
@@ -511,21 +571,33 @@ const HomePage = () => {
         </p>
         
         <ServicesGrid>
-          <ServiceCard>
+          <ServiceCard category="grocery">
+            <CategoryLabel category="grocery">Grocery</CategoryLabel>
+            <IconWrapper category="grocery">
+              <FontAwesomeIcon icon={faShoppingBasket} />
+            </IconWrapper>
             <ServiceImage>IMAGE PLACEHOLDER</ServiceImage>
             <ServiceTitle>GROCERY GUIDES</ServiceTitle>
             <p>Comprehensive grocery shopping guides to help you make healthier food choices and stay on track.</p>
             <Button to="/plans" style={{ marginTop: '1rem', fontFamily: "'Georgia', serif", fontWeight: "700" }}>Learn More</Button>
           </ServiceCard>
           
-          <ServiceCard>
+          <ServiceCard category="macro">
+            <CategoryLabel category="macro">Macro</CategoryLabel>
+            <IconWrapper category="macro">
+              <FontAwesomeIcon icon={faCalculator} />
+            </IconWrapper>
             <ServiceImage>IMAGE PLACEHOLDER</ServiceImage>
             <ServiceTitle>MACRO GUIDES</ServiceTitle>
             <p>Learn how to track and optimize your macronutrients for your specific fitness and health goals.</p>
             <Button to="/plans" style={{ marginTop: '1rem', fontFamily: "'Georgia', serif", fontWeight: "700" }}>Learn More</Button>
           </ServiceCard>
           
-          <ServiceCard>
+          <ServiceCard category="nutrition">
+            <CategoryLabel category="nutrition">Nutrition</CategoryLabel>
+            <IconWrapper category="nutrition">
+              <FontAwesomeIcon icon={faUtensils} />
+            </IconWrapper>
             <ServiceImage>IMAGE PLACEHOLDER</ServiceImage>
             <ServiceTitle>CUSTOM NUTRITION PLANS</ServiceTitle>
             <p>Personalized nutrition strategies that fit your lifestyle and dietary preferences.</p>

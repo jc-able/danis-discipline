@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import Section from '../components/Section';
 import Button from '../components/Button';
 import { getCertifications } from '../services/supabaseClient';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCertificate } from '@fortawesome/free-solid-svg-icons';
 
 // Create a special component for white text with pink shadow (like "Dani's Discipline")
 const WhitePinkEffect = styled.span`
@@ -104,21 +106,55 @@ const CertificationsGrid = styled.div`
 `;
 
 const CertificationCard = styled.div`
-  background-color: var(--light-gray);
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+  padding: 2.5rem;
+  border-radius: 12px;
+  background-color: var(--white);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: var(--teal);
+  }
   
   &:hover {
-    transform: translateY(-5px);
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  }
+`;
+
+const IconWrapper = styled.div`
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  font-size: 1.8rem;
+  color: var(--teal);
+  opacity: 0.9;
+  transition: all 0.3s ease;
+  
+  ${CertificationCard}:hover & {
+    transform: scale(1.1);
   }
 `;
 
 const CertificationTitle = styled.h3`
+  font-size: 1.5rem;
+  margin: 2.5rem 0 1rem;
   font-family: 'Georgia', serif;
   font-weight: 600;
-  margin-bottom: 0.5rem;
+  color: var(--black);
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.05);
 `;
 
 const CertificationOrg = styled.p`
@@ -231,6 +267,9 @@ const AboutPage = () => {
           <CertificationsGrid>
             {displayCertifications.map((cert) => (
               <CertificationCard key={cert.id}>
+                <IconWrapper>
+                  <FontAwesomeIcon icon={faCertificate} />
+                </IconWrapper>
                 <CertificationTitle>{cert.title}</CertificationTitle>
                 <CertificationOrg>{cert.organization}</CertificationOrg>
                 <p>{cert.year}</p>
