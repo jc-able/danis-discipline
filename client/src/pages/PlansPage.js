@@ -5,11 +5,11 @@ import Button from '../components/Button';
 import { getIndependentPlans, subscribeToNewsletter } from '../services/supabaseClient';
 import { useForm } from 'react-hook-form';
 
-// Create a component for black text with teal shadow (like "together")
-const PinkTealEffect = styled.span`
+// Create a component for white text with pink shadow (like "training")
+const TealPinkEffect = styled.span`
   position: relative;
   display: inline-block;
-  color: var(--black);
+  color: var(--white);
   font-style: italic;
   font-family: 'Georgia', serif;
   font-weight: 700;
@@ -20,11 +20,11 @@ const PinkTealEffect = styled.span`
     position: absolute;
     left: -3px;
     top: 3px;
-    color: var(--teal);
+    color: var(--pink);
     z-index: -1;
     font-family: 'Georgia', serif;
     font-weight: 700;
-    text-shadow: 0 0 10px var(--teal);
+    text-shadow: 0 0 10px var(--pink);
   }
 `;
 
@@ -211,7 +211,7 @@ const PlansPage = () => {
       <HeaderSection>
         <div className="container">
           <HeaderTitle>
-            INDEPENDENT <PinkTealEffect data-text="plans">plans</PinkTealEffect>
+            INDEPENDENT <TealPinkEffect data-text="plans">plans</TealPinkEffect>
           </HeaderTitle>
           <HeaderSubtitle>Self-guided programs for your journey</HeaderSubtitle>
         </div>

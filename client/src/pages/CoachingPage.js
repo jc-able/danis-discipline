@@ -4,11 +4,11 @@ import Section from '../components/Section';
 import Button from '../components/Button';
 import { getCoachingPackages } from '../services/supabaseClient';
 
-// Create a component for black text with teal shadow (like "together")
-const PinkTealEffect = styled.span`
+// Create a component for white text with pink shadow (like "training")
+const TealPinkEffect = styled.span`
   position: relative;
   display: inline-block;
-  color: var(--black);
+  color: var(--white);
   font-style: italic;
   font-family: 'Georgia', serif;
   font-weight: 700;
@@ -19,11 +19,11 @@ const PinkTealEffect = styled.span`
     position: absolute;
     left: -3px;
     top: 3px;
-    color: var(--teal);
+    color: var(--pink);
     z-index: -1;
     font-family: 'Georgia', serif;
     font-weight: 700;
-    text-shadow: 0 0 10px var(--teal);
+    text-shadow: 0 0 10px var(--pink);
   }
 `;
 
@@ -217,7 +217,7 @@ const CoachingPage = () => {
       <HeaderSection>
         <div className="container">
           <HeaderTitle>
-            1:1 <PinkTealEffect data-text="coaching">coaching</PinkTealEffect>
+            1:1 <TealPinkEffect data-text="coaching">coaching</TealPinkEffect>
           </HeaderTitle>
           <HeaderSubtitle>Personalized plans for your success</HeaderSubtitle>
         </div>
