@@ -257,16 +257,17 @@ const FeatureItem = styled.li`
 const PinkEffect = styled.span`
   position: relative;
   display: inline-block;
-  color: var(--pink);
+  color: var(--black);
   font-style: italic;
+  z-index: 2;
   
-  &::after {
+  &::before {
     content: attr(data-text);
     position: absolute;
-    left: 2px;
-    top: 2px;
-    color: var(--black);
-    z-index: 1;
+    left: -3px;
+    top: 3px;
+    color: var(--pink);
+    z-index: -1;
   }
 `;
 
