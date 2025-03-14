@@ -49,17 +49,26 @@ For detailed specifications, see the [Product Requirements Document](docs/PRD.md
 
 ### In Progress / Remaining Tasks
 - ⏳ Images will be retrieved from the Supabase database
-- ⏳ Supabase database table setup:
-  - `independent_plans` table
+- ✅ Supabase database table setup:
+  - `independent_plans` table with Grocery Shopping Guide product
   - `display_orders` table
   - `home_polaroids` table
   - *(Future Phase)* `coaching_packages` table
-- ⏳ Complete Stripe integration on backend
+- ✅ Initial Stripe integration for Grocery Shopping Guide
+- ⏳ Complete Stripe integration for additional products
 - ⏳ Email confirmation for purchases
 - ⏳ Testing across different browsers and devices
 - ⏳ Deployment to Vercel
 
 ## Recent Changes
+
+### May 2024
+- **Stripe Integration for Grocery Shopping Guide**:
+  - Created Stripe product for the Grocery Shopping Guide
+  - Added corresponding product to Supabase independent_plans table
+  - Implemented test checkout page at /test-checkout
+  - Set up webhook configuration for Stripe event handling
+  - Added utility scripts for managing Stripe products and testing webhooks
 
 ### April 2024
 - **Database Simplification**:
@@ -133,12 +142,14 @@ npm start
 ## Next Steps for Developers
 If you're picking up this project, here's what you should focus on next:
 
-1. **Backend Implementation**:
-   - Connect Stripe for actual payment processing
-   - Set up webhook handlers for Stripe events
+1. **Testing Stripe Integration**:
+   - Visit http://localhost:3000/test-checkout to test the checkout flow
+   - Use Stripe test cards (e.g., 4242 4242 4242 4242) to simulate payments
+   - Set up webhook testing using the Stripe CLI as documented in `server/scripts/testStripeWebhook.js`
+   - Complete Stripe integration for other products
 
 2. **Supabase Setup**:
-   - Create the database tables as defined in the PRD
+   - Add remaining independent plans to the database
    - Configure storage buckets for images
    - Set up row-level security policies
 
