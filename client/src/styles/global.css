@@ -120,3 +120,19 @@ label {
 .italic {
   font-style: italic;
 }
+
+/* Pink text with black overlay effect */
+.pink-effect {
+  position: relative;
+  display: inline-block;
+  color: var(--pink);
+}
+
+.pink-effect::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  color: var(--black);
+  z-index: 1;
+}

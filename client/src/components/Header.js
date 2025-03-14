@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import styled from 'styled-components';
+import { BiShoppingBag } from 'react-icons/bi';
 
 const HeaderContainer = styled.header`
   background-color: var(--black);
@@ -79,6 +80,8 @@ const CartIcon = styled(Link)`
   margin-left: 1.5rem;
   color: var(--white);
   font-size: 1.2rem;
+  display: flex;
+  align-items: center;
   
   &:hover {
     color: var(--teal);
@@ -141,7 +144,7 @@ const Header = () => {
               </NavItem>
             </NavList>
             
-            <CartIcon to="/cart">🛒</CartIcon>
+            <CartIcon to="/cart"><BiShoppingBag size={24} /></CartIcon>
           </Nav>
         </HeaderContent>
       </div>

@@ -254,6 +254,22 @@ const FeatureItem = styled.li`
   }
 `;
 
+const PinkEffect = styled.span`
+  position: relative;
+  display: inline-block;
+  color: var(--pink);
+  font-style: italic;
+  
+  &::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    color: var(--black);
+    z-index: 1;
+  }
+`;
+
 const HomePage = () => {
   const [isMobile, setIsMobile] = useState(false);
 
@@ -350,7 +366,7 @@ const HomePage = () => {
       {/* Services Section */}
       <Section background="white" padding="5rem 0">
         <Section.Title align="center">
-          LET'S WORK <span className="italic">together</span>
+          LET'S WORK <PinkEffect data-text="together">together</PinkEffect>
         </Section.Title>
         <p style={{ textAlign: 'center', maxWidth: '800px', margin: '0 auto 3rem', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '0.9rem' }}>
           WHETHER YOU ARE LOOKING FOR COMPLETE 1:1 COACHING, A CUSTOM
@@ -386,7 +402,7 @@ const HomePage = () => {
       <Section background="teal" padding="4rem 0">
         <div style={{ textAlign: 'center', maxWidth: '800px', margin: '0 auto' }}>
           <Section.Title align="center">
-            WHERE DO I <span className="italic">start?</span>
+            WHERE DO I <PinkEffect data-text="start?">start?</PinkEffect>
           </Section.Title>
           <p>
             Not sure which option is right for you? Start with a consultation to discuss your goals and find the perfect fit for your fitness journey.
@@ -401,7 +417,7 @@ const HomePage = () => {
           <FeatureImage>IMAGE PLACEHOLDER</FeatureImage>
           <FeatureContent>
             <Section.Title>
-              1:1 <span className="italic">COACHING</span>
+              1:1 <PinkEffect data-text="COACHING">COACHING</PinkEffect>
             </Section.Title>
             <p>
               Work directly with a certified fitness and nutrition coach to create a customized plan that fits your lifestyle and helps you achieve your goals.
