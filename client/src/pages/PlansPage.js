@@ -84,9 +84,12 @@ const CategoryNav = styled.div`
   position: sticky;
   top: 0;
   z-index: 100;
-  background-color: var(--black);
+  background-color: var(--white);
   padding: 1rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  width: 100%;
+  left: 0;
+  right: 0;
   
   @media (max-width: 768px) {
     flex-direction: column;
@@ -96,7 +99,7 @@ const CategoryNav = styled.div`
 
 const CategoryButton = styled.button`
   background: ${props => props.active ? 'var(--pink)' : 'transparent'};
-  color: white;
+  color: ${props => props.active ? 'white' : 'var(--black)'};
   border: 2px solid ${props => props.active ? 'var(--pink)' : 'var(--teal)'};
   padding: 0.75rem 1.5rem;
   margin: 0 0.5rem 1rem;
@@ -109,6 +112,7 @@ const CategoryButton = styled.button`
   
   &:hover {
     background: ${props => props.active ? 'var(--pink)' : 'var(--teal)'};
+    color: white;
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   }
