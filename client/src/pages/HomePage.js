@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Section from '../components/Section';
 import Button from '../components/Button';
+import { FiArrowDown } from 'react-icons/fi';
 
 // Styled components for the home page
 const HeroSection = styled.div`
@@ -18,21 +19,24 @@ const HeroSection = styled.div`
 `;
 
 const HeroTitle = styled.h1`
-  font-size: 3.5rem;
+  font-size: 4rem;
   margin-bottom: 1rem;
+  font-family: 'Georgia', serif;
+  font-weight: 700;
   
   @media (max-width: 768px) {
-    font-size: 2.5rem;
+    font-size: 3rem;
+    margin-top: 3rem; /* Add space above the title on mobile */
   }
 `;
 
 const HeroSubtitle = styled.p`
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
   
   @media (max-width: 768px) {
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
 `;
 
@@ -96,7 +100,7 @@ const Polaroid = styled.div`
   }
   
   @media (max-width: 768px) {
-    width: 150px;
+    width: 120px;
     display: ${props => props.hideOnMobile ? 'none' : 'block'};
   }
 `;
@@ -113,8 +117,58 @@ const PolaroidImage = styled.div`
   text-align: center;
   
   @media (max-width: 768px) {
-    height: 130px;
+    height: 100px;
+    font-size: 0.7rem;
   }
+`;
+
+// Mobile-specific container for polaroids
+const MobilePolaroidContainer = styled.div`
+  display: none;
+  
+  @media (max-width: 768px) {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 10px;
+    position: absolute;
+    top: 10px;
+    left: 0;
+    z-index: 1;
+  }
+`;
+
+const MobilePolaroid = styled.div`
+  background: white;
+  padding: 5px 5px 15px 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100px;
+  margin: 0 5px;
+  transform: ${props => props.rotation || 'rotate(0deg)'};
+  
+  &::before {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 10px;
+    background-color: rgba(255, 255, 255, 0.7);
+    top: -5px;
+    left: 35px;
+    z-index: 2;
+    opacity: 0.8;
+  }
+`;
+
+const MobilePolaroidImage = styled.div`
+  width: 100%;
+  height: 80px;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+  font-size: 0.6rem;
+  text-align: center;
 `;
 
 const ServicesGrid = styled.div`
@@ -201,62 +255,96 @@ const FeatureItem = styled.li`
 `;
 
 const HomePage = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if device is mobile
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkIfMobile();
+    window.addEventListener('resize', checkIfMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkIfMobile);
+    };
+  }, []);
+
   return (
     <>
       {/* Hero Section with Polaroids */}
       <HeroSection>
-        {/* Polaroid 1 - Left side */}
-        <Polaroid 
-          rotation="rotate(-8deg)" 
-          tapeTop="-5px" 
-          tapeLeft="80px" 
-          tapeBottom="40px"
-          tapeRight="-15px"
-          tapeRotation="rotate(0deg)"
-          secondTapeRotation="rotate(90deg)"
-          style={{ top: '25%', left: '5%' }}
-        >
-          <PolaroidImage>
-            No documents found in Photo1 collection
-          </PolaroidImage>
-        </Polaroid>
+        {!isMobile && (
+          <>
+            {/* Polaroid 1 - Left side */}
+            <Polaroid 
+              rotation="rotate(-8deg)" 
+              tapeTop="-5px" 
+              tapeLeft="80px" 
+              tapeBottom="40px"
+              tapeRight="-15px"
+              tapeRotation="rotate(0deg)"
+              secondTapeRotation="rotate(90deg)"
+              style={{ top: '20%', left: '5%' }}
+            >
+              <PolaroidImage>
+                No documents found in Photo1 collection
+              </PolaroidImage>
+            </Polaroid>
+            
+            {/* Polaroid 2 - Top right */}
+            <Polaroid 
+              rotation="rotate(5deg)" 
+              tapeTop="-5px" 
+              tapeLeft="80px" 
+              tapeBottom="50px"
+              tapeRight="-15px"
+              tapeRotation="rotate(-5deg)"
+              secondTapeRotation="rotate(90deg)"
+              style={{ top: '15%', right: '8%' }}
+            >
+              <PolaroidImage>
+                Photo 2
+              </PolaroidImage>
+            </Polaroid>
+            
+            {/* Polaroid 3 - Bottom right */}
+            <Polaroid 
+              rotation="rotate(-5deg)" 
+              tapeTop="-5px" 
+              tapeLeft="60px" 
+              tapeBottom="40px"
+              tapeRight="-10px"
+              tapeRotation="rotate(5deg)"
+              secondTapeRotation="rotate(85deg)"
+              style={{ bottom: '20%', right: '10%' }}
+            >
+              <PolaroidImage>
+                Photo 3
+              </PolaroidImage>
+            </Polaroid>
+          </>
+        )}
         
-        {/* Polaroid 2 - Top right */}
-        <Polaroid 
-          rotation="rotate(5deg)" 
-          tapeTop="-5px" 
-          tapeLeft="80px" 
-          tapeBottom="50px"
-          tapeRight="-15px"
-          tapeRotation="rotate(-5deg)"
-          secondTapeRotation="rotate(90deg)"
-          style={{ top: '15%', right: '8%' }}
-        >
-          <PolaroidImage>
-            Photo 2
-          </PolaroidImage>
-        </Polaroid>
-        
-        {/* Polaroid 3 - Bottom right */}
-        <Polaroid 
-          rotation="rotate(-5deg)" 
-          tapeTop="-5px" 
-          tapeLeft="60px" 
-          tapeBottom="40px"
-          tapeRight="-10px"
-          tapeRotation="rotate(5deg)"
-          secondTapeRotation="rotate(85deg)"
-          style={{ bottom: '20%', right: '10%' }}
-          hideOnMobile={true}
-        >
-          <PolaroidImage>
-            Photo 3
-          </PolaroidImage>
-        </Polaroid>
+        {isMobile && (
+          <MobilePolaroidContainer>
+            <MobilePolaroid rotation="rotate(-3deg)">
+              <MobilePolaroidImage>
+                Photo 1
+              </MobilePolaroidImage>
+            </MobilePolaroid>
+            <MobilePolaroid rotation="rotate(2deg)">
+              <MobilePolaroidImage>
+                Photo 2
+              </MobilePolaroidImage>
+            </MobilePolaroid>
+          </MobilePolaroidContainer>
+        )}
         
         <HeroTitle>Dani's Discipline</HeroTitle>
         <HeroSubtitle>Achieve Goals Without Limits</HeroSubtitle>
-        <DownArrow>↓</DownArrow>
+        <DownArrow><FiArrowDown /></DownArrow>
       </HeroSection>
       
       {/* Services Section */}
@@ -264,7 +352,7 @@ const HomePage = () => {
         <Section.Title align="center">
           LET'S WORK <span className="italic">together</span>
         </Section.Title>
-        <p style={{ textAlign: 'center', maxWidth: '800px', margin: '0 auto 3rem' }}>
+        <p style={{ textAlign: 'center', maxWidth: '800px', margin: '0 auto 3rem', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '0.9rem' }}>
           WHETHER YOU ARE LOOKING FOR COMPLETE 1:1 COACHING, A CUSTOM
           INDEPENDENT PLAN, OR A WORKOUT PROGRAM TO PERFORM, I'VE GOT YOU
           COVERED.
