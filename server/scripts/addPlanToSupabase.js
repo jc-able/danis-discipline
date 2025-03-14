@@ -1,11 +1,11 @@
 // Script to add the Grocery Shopping Guide product to Supabase
-require('dotenv').config({ path: '../.env' });
+require('dotenv').config();
 const supabaseService = require('../services/supabase');
 
 /**
  * Add the grocery shopping guide plan to the independent_plans table
  * @param {string} stripeProductId - Stripe product ID
- * @param {string} stripePriceId - Stripe price ID (optional)
+ * @param {string} stripePriceId - Stripe price ID (unused due to schema limitations)
  */
 async function addPlanToSupabase(stripeProductId, stripePriceId = null) {
   try {
@@ -42,9 +42,10 @@ async function addPlanToSupabase(stripeProductId, stripePriceId = null) {
       updated_at: new Date().toISOString()
     };
 
-    // Add metadata for price ID if provided
+    // Note: stripePriceId is not stored in the database since the column doesn't exist
+    // We'll store it in the console output for reference
     if (stripePriceId) {
-      newPlan.stripe_price_id = stripePriceId;
+      console.log(`Note: Stripe Price ID (${stripePriceId}) will not be stored in the database due to schema limitations.`);
     }
 
     const result = await supabaseService.insert('independent_plans', newPlan);

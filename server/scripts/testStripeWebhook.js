@@ -1,5 +1,5 @@
 // Script to assist with testing Stripe webhooks
-require('dotenv').config({ path: '../.env' });
+require('dotenv').config();
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 /**

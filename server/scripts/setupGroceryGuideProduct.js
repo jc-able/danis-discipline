@@ -1,5 +1,5 @@
 // Script to set up the Grocery Shopping Guide product in Stripe and Supabase
-require('dotenv').config({ path: '../.env' });
+require('dotenv').config();
 const { createProduct } = require('./createStripeProduct');
 const { addPlanToSupabase } = require('./addPlanToSupabase');
 

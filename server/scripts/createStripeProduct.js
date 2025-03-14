@@ -1,5 +1,5 @@
 // Script to create a Stripe product for the Grocery Shopping Guide
-require('dotenv').config({ path: '../.env' });
+require('dotenv').config();
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 /**
