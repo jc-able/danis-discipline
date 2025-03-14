@@ -8,7 +8,6 @@ Dani's Discipline is a fitness business website designed to:
 - Showcase independent plans
 - Enable purchases via Stripe integration
 - Provide contact forms for inquiries
-- Allow newsletter signups
 - Display coach certifications and credentials
 - *(Future Phase)* Add personalized coaching services
 
@@ -26,7 +25,7 @@ Dani's Discipline is a fitness business website designed to:
 - Modern, responsive design with Miami Vice theme (teal and pink)
 - E-commerce functionality for purchasing plans
 - Independent plans showcase
-- Contact form and newsletter signup
+- Contact form for inquiries
 - Coach profile and certifications showcase
 - *(Future Phase)* Personalized coaching packages
 
@@ -46,14 +45,13 @@ For detailed specifications, see the [Product Requirements Document](docs/PRD.md
 - ✅ Integration with Supabase client for data fetching
 - ✅ React Hook Form implementation for forms
 - ✅ Stripe checkout flow interface
+- ✅ Backend API implementation for core features
 
 ### In Progress / Remaining Tasks
-- ⏳ Server-side API implementation
 - ⏳ Actual image assets (currently using placeholders)
 - ⏳ Supabase database table setup:
   - `independent_plans` table
   - `certifications` table
-  - `newsletter_subscribers` table
   - `contact_messages` table
   - `display_orders` table
   - `home_polaroids` table
@@ -74,6 +72,16 @@ For detailed specifications, see the [Product Requirements Document](docs/PRD.md
   - Form handling with validation
   - Miami Vice theme using CSS variables
   - Responsive design for all screen sizes
+- Implemented backend API with endpoints for:
+  - Independent plans
+  - Coaching packages (future implementation)
+  - Contact form submissions
+  - Orders and payments via Stripe
+  - Image serving
+- **Removed newsletter subscription feature** (March 14, 2024):
+  - Removed newsletter subscription endpoints
+  - Updated PRD to exclude newsletter functionality
+  - Any frontend components related to newsletter will need to be removed
 
 ## Development Setup
 
@@ -118,7 +126,6 @@ npm start
 If you're picking up this project, here's what you should focus on next:
 
 1. **Backend Implementation**:
-   - Implement the Express routes according to the API endpoints defined in the PRD
    - Connect Stripe for actual payment processing
    - Set up webhook handlers for Stripe events
 
@@ -131,7 +138,11 @@ If you're picking up this project, here's what you should focus on next:
    - Replace placeholder images with actual assets
    - Add logo files (favicon.ico, logo192.png, logo512.png)
 
-4. **Testing**:
+4. **Frontend Updates**:
+   - Remove any newsletter subscription UI components
+   - Ensure consistency with backend changes
+
+5. **Testing**:
    - Test form submissions
    - Test Stripe checkout flow
    - Ensure mobile responsiveness
