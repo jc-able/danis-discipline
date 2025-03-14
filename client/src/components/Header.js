@@ -135,9 +135,6 @@ const Header = () => {
                 <NavLinkStyled to="/plans">Independent Plans</NavLinkStyled>
               </NavItem>
               <NavItem>
-                <NavLinkStyled to="/training">Training</NavLinkStyled>
-              </NavItem>
-              <NavItem>
                 <NavLinkStyled to="/about">About Me</NavLinkStyled>
               </NavItem>
               <NavItem>

@@ -530,7 +530,7 @@ const HomePage = () => {
             <ServiceImage>IMAGE PLACEHOLDER</ServiceImage>
             <ServiceTitle>WORKOUT PROGRAMS</ServiceTitle>
             <p>Structured workout programs designed to help you build strength, endurance, and overall fitness.</p>
-            <Button to="/training" style={{ marginTop: '1rem', fontFamily: "'Georgia', serif", fontWeight: "700" }}>Learn More</Button>
+            <Button to="/plans" style={{ marginTop: '1rem', fontFamily: "'Georgia', serif", fontWeight: "700" }}>Learn More</Button>
           </ServiceCard>
         </ServicesGrid>
       </Section>
