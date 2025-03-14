@@ -176,6 +176,15 @@ const FeatureList = styled.ul`
   font-family: 'Arial', sans-serif;
 `;
 
+const PackageFeatures = styled.ul`
+  list-style-type: none;
+  padding: 0;
+  margin: 2rem 0;
+  text-align: left;
+  flex-grow: 1;
+  font-family: 'Arial', sans-serif;
+`;
+
 const FeatureItem = styled.li`
   margin-bottom: 0.75rem;
   padding-left: 2rem;
