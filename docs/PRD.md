@@ -10,7 +10,6 @@ Dani's Discipline is a fitness and nutrition coaching website designed to provid
 - Allow potential clients to learn about independent plans
 - Enable clients to purchase plans via Stripe integration
 - Provide a contact form for inquiries
-- Allow users to sign up for a newsletter
 - Display coach certifications and credentials
 - Showcase the coach's philosophy and background
 - *(Future Phase)* Implement personalized coaching services
@@ -76,7 +75,6 @@ project/
   - Independent plans
   - Images and media content
   - Contact form submissions
-  - Newsletter subscribers
 
 ## 3. Page Descriptions
 
@@ -143,11 +141,6 @@ All pages will include:
   - Six plan options with icons and titles (CUSTOM REVERSE DIETING PLAN, POST REVERSE CARB CYCLING CUT, etc.)
   - Arrow icon for each plan
   - Numbered (01-06)
-- **Newsletter Signup**:
-  - "GET ON the list" heading
-  - "SIGN UP FOR MY EMAIL LIST AND ALWAYS STAY UP TO DATE WITH MACROHABITS" text
-  - Name and email input fields
-  - "SIGN UP" button
 
 ### 3.5 About Me Page
 - **Header Section**:
@@ -233,19 +226,7 @@ All pages will include:
 }
 ```
 
-### 4.4 Newsletter Subscribers
-```javascript
-{
-  id: String,                // Unique identifier (REQUIRED, auto-generated UUID)
-  name: String,              // Subscriber name (REQUIRED, 2-100 chars)
-  email: String,             // Subscriber email (REQUIRED, valid email format, unique)
-  subscriptionDate: Date,    // Date of subscription (REQUIRED, auto-generated)
-  active: Boolean,           // Subscription status (REQUIRED, default: true)
-  unsubscribeToken: String   // Token for unsubscribing (REQUIRED, auto-generated)
-}
-```
-
-### 4.5 Contact Messages
+### 4.4 Contact Messages
 ```javascript
 {
   id: String,                // Unique identifier (REQUIRED, auto-generated UUID)
@@ -258,7 +239,7 @@ All pages will include:
 }
 ```
 
-### 4.6 Display Orders
+### 4.5 Display Orders
 ```javascript
 {
   id: String,                // Unique identifier (REQUIRED, auto-generated UUID)
@@ -275,7 +256,7 @@ All pages will include:
 }
 ```
 
-### 4.7 Home Polaroids
+### 4.6 Home Polaroids
 ```javascript
 {
   id: String,                    // Unique identifier (REQUIRED, auto-generated UUID)
@@ -306,7 +287,7 @@ All pages will include:
 }
 ```
 
-### 4.8 Homepage Settings
+### 4.7 Homepage Settings
 ```javascript
 {
   id: String,                // Unique identifier (REQUIRED, auto-generated UUID)
@@ -337,18 +318,15 @@ All pages will include:
 ### 5.3 Contact Form
 - `POST /api/contact` - Submit a contact form message
 
-### 5.4 Newsletter
-- `POST /api/subscribe` - Subscribe to the newsletter
-
-### 5.5 Stripe Integration
+### 5.4 Stripe Integration
 - `POST /api/create-checkout-session` - Create a Stripe checkout session
 - `GET /api/checkout-success` - Handle successful checkout
 - `GET /api/checkout-cancel` - Handle canceled checkout
 
-### 5.6 Image Retrieval
+### 5.5 Image Retrieval
 - `GET /api/images/:category/:id` - Retrieve images from Supabase storage
 
-### 5.7 Display Orders
+### 5.6 Display Orders
 - `GET /api/display-orders/:id` - Retrieve order status (for confirmation pages)
 
 ## 6. UI/UX Guidelines
@@ -420,7 +398,6 @@ All pages will include:
 - Connect to Supabase for data storage
 - Implement image retrieval from Supabase
 - Set up form handling with React Hook Form
-- Implement newsletter subscription functionality
 
 ### 7.4 Phase 4: Payment Integration
 - Set up Stripe integration
@@ -448,7 +425,6 @@ All pages will include:
 ### 8.1 Functional Testing
 - Verify all navigation links work correctly
 - Test form submissions
-- Test newsletter signup
 - Verify Stripe payment flow
 - Test responsiveness on various devices
 
