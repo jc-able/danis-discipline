@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Section from '../components/Section';
 import Button from '../components/Button';
 import { FiArrowDown } from 'react-icons/fi';
+import { getHomePolaroids, supabase } from '../services/supabaseClient';
 
 // Styled components for the home page
 const HeroSection = styled.div`
@@ -333,6 +334,8 @@ const WhitePinkEffect = styled.span`
 
 const HomePage = () => {
   const [isMobile, setIsMobile] = useState(false);
+  const [polaroids, setPolaroids] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // Check if device is mobile
   useEffect(() => {
@@ -348,74 +351,117 @@ const HomePage = () => {
     };
   }, []);
 
+  // Fetch polaroids from database
+  useEffect(() => {
+    const fetchPolaroids = async () => {
+      try {
+        setLoading(true);
+        const data = await getHomePolaroids();
+        setPolaroids(data);
+      } catch (error) {
+        console.error('Error fetching polaroids:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchPolaroids();
+  }, []);
+
+  // Filter polaroids by position
+  const getDesktopPolaroids = () => {
+    return polaroids.filter(p => 
+      p.position === 'top-left' || 
+      p.position === 'top-right' || 
+      p.position === 'bottom-right'
+    );
+  };
+  
+  const getMobilePolaroids = () => {
+    return polaroids.filter(p => 
+      p.position === 'mobile-left' || 
+      p.position === 'mobile-right'
+    );
+  };
+
+  // Get public URL for image
+  const getImageUrl = (path) => {
+    // Extract the base path without extension
+    const basePath = path.substring(0, path.lastIndexOf('.')) || path;
+    
+    // Try to get the public URL with the original path
+    const { data: originalData } = supabase.storage.from('images').getPublicUrl(path);
+    
+    // If we have a valid URL, return it
+    if (originalData?.publicUrl) {
+      return originalData.publicUrl;
+    }
+    
+    // If not, try common image formats
+    const formats = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+    for (const format of formats) {
+      const { data } = supabase.storage.from('images').getPublicUrl(`${basePath}${format}`);
+      if (data?.publicUrl) {
+        return data.publicUrl;
+      }
+    }
+    
+    // Default fallback
+    return '';
+  };
+
   return (
     <>
       {/* Hero Section with Polaroids */}
       <HeroSection>
-        {!isMobile && (
+        {!loading && !isMobile && (
           <>
-            {/* Polaroid 1 - Left side - move back to original position */}
-            <Polaroid 
-              rotation="rotate(-8deg)" 
-              tapeTop="-5px" 
-              tapeLeft="80px" 
-              tapeBottom="40px"
-              tapeRight="-15px"
-              tapeRotation="rotate(0deg)"
-              secondTapeRotation="rotate(90deg)"
-              style={{ top: '20%', left: '5%' }}
-            >
-              <PolaroidImage>
-                No documents found in Photo1 collection
-              </PolaroidImage>
-            </Polaroid>
-            
-            {/* Polaroid 2 - Top right */}
-            <Polaroid 
-              rotation="rotate(5deg)" 
-              tapeTop="-5px" 
-              tapeLeft="80px" 
-              tapeBottom="50px"
-              tapeRight="-15px"
-              tapeRotation="rotate(-5deg)"
-              secondTapeRotation="rotate(90deg)"
-              style={{ top: '8%', right: '8%' }}
-            >
-              <PolaroidImage>
-                Photo 2
-              </PolaroidImage>
-            </Polaroid>
-            
-            {/* Polaroid 3 - Bottom right - lower it */}
-            <Polaroid 
-              rotation="rotate(-5deg)" 
-              tapeTop="-5px" 
-              tapeLeft="60px" 
-              tapeBottom="40px"
-              tapeRight="-10px"
-              tapeRotation="rotate(5deg)"
-              secondTapeRotation="rotate(85deg)"
-              style={{ bottom: '10%', right: '10%' }}
-            >
-              <PolaroidImage>
-                Photo 3
-              </PolaroidImage>
-            </Polaroid>
+            {getDesktopPolaroids().map((polaroid) => (
+              <Polaroid 
+                key={polaroid.id}
+                rotation={polaroid.rotation} 
+                tapeTop={polaroid.tape_top}
+                tapeLeft={polaroid.tape_left}
+                tapeBottom={polaroid.tape_bottom}
+                tapeRight={polaroid.tape_right}
+                tapeRotation={polaroid.tape_rotation}
+                secondTapeRotation={polaroid.second_tape_rotation}
+                hideOnMobile={polaroid.hide_on_mobile}
+                style={{ 
+                  top: polaroid.position_top || 'auto', 
+                  left: polaroid.position_left || 'auto',
+                  right: polaroid.position_right || 'auto',
+                  bottom: polaroid.position_bottom || 'auto'
+                }}
+              >
+                <PolaroidImage>
+                  <img 
+                    src={getImageUrl(polaroid.image_path)} 
+                    alt={polaroid.name} 
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                </PolaroidImage>
+              </Polaroid>
+            ))}
           </>
         )}
         
-        {isMobile && (
+        {!loading && isMobile && (
           <MobilePolaroidContainer>
-            <MobilePolaroid rotation="rotate(-3deg)">
-              <MobilePolaroidImage>
-                Photo 1
-              </MobilePolaroidImage>
-            </MobilePolaroid>
-            <MobilePolaroid rotation="rotate(2deg)">
-              <MobilePolaroidImage>
-                Photo 2
-              </MobilePolaroidImage>
-            </MobilePolaroid>
+            {getMobilePolaroids().map((polaroid) => (
+              <MobilePolaroid 
+                key={polaroid.id}
+                rotation={polaroid.rotation}
+              >
+                <MobilePolaroidImage>
+                  <img 
+                    src={getImageUrl(polaroid.image_path)} 
+                    alt={polaroid.name} 
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                </MobilePolaroidImage>
+              </MobilePolaroid>
+            ))}
           </MobilePolaroidContainer>
         )}
         

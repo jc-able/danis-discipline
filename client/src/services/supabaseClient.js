@@ -223,4 +223,23 @@ export const getOrderDetails = async (sessionId) => {
       email: 'customer@example.com'
     };
   }
+};
+
+/**
+ * Fetch home page polaroids
+ */
+export const getHomePolaroids = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('home_polaroids')
+      .select('*')
+      .eq('active', true)
+      .order('display_order');
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error('Error fetching home polaroids:', error);
+    return [];
+  }
 }; 
