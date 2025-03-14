@@ -385,29 +385,45 @@ const HomePage = () => {
   };
 
   // Get public URL for image
-  const getImageUrl = (path) => {
-    // Extract the base path without extension
-    const basePath = path.substring(0, path.lastIndexOf('.')) || path;
+  const getImageUrl = (polaroid) => {
+    let url = '';
     
-    // Try to get the public URL with the original path
-    const { data: originalData } = supabase.storage.from('images').getPublicUrl(path);
-    
-    // If we have a valid URL, return it
-    if (originalData?.publicUrl) {
-      return originalData.publicUrl;
+    // If we have a full URL from the database, use it first
+    if (polaroid.image_full_url) {
+      url = polaroid.image_full_url;
     }
-    
-    // If not, try common image formats
-    const formats = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
-    for (const format of formats) {
-      const { data } = supabase.storage.from('images').getPublicUrl(`${basePath}${format}`);
-      if (data?.publicUrl) {
-        return data.publicUrl;
+    // If we have a storage path, use that
+    else if (polaroid.image_storage_path) {
+      const { data } = supabase.storage.from('images').getPublicUrl(polaroid.image_storage_path);
+      url = data?.publicUrl || '';
+    }
+    // Legacy fallback for old records using image_path
+    else if (polaroid.image_path) {
+      // Extract the base path without extension
+      const basePath = polaroid.image_path.substring(0, polaroid.image_path.lastIndexOf('.')) || polaroid.image_path;
+      
+      // Try to get the public URL with the original path
+      const { data: originalData } = supabase.storage.from('images').getPublicUrl(polaroid.image_path);
+      
+      // If we have a valid URL, use it
+      if (originalData?.publicUrl) {
+        url = originalData.publicUrl;
+      }
+      else {
+        // If not, try common image formats
+        const formats = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.HEIC', '.JPG', '.JPEG', '.PNG'];
+        for (const format of formats) {
+          const { data } = supabase.storage.from('images').getPublicUrl(`${basePath}${format}`);
+          if (data?.publicUrl) {
+            url = data.publicUrl;
+            break;
+          }
+        }
       }
     }
     
-    // Default fallback
-    return '';
+    // Add cache-busting query parameter to prevent browser caching
+    return url ? `${url}?t=${Date.now()}` : '';
   };
 
   return (
@@ -436,9 +452,14 @@ const HomePage = () => {
               >
                 <PolaroidImage>
                   <img 
-                    src={getImageUrl(polaroid.image_path)} 
+                    src={getImageUrl(polaroid)} 
                     alt={polaroid.name} 
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    onError={(e) => {
+                      // Fallback to a placeholder on error
+                      e.target.onerror = null;
+                      e.target.src = 'https://via.placeholder.com/200x180?text=Image+Not+Found';
+                    }}
                   />
                 </PolaroidImage>
               </Polaroid>
@@ -455,9 +476,14 @@ const HomePage = () => {
               >
                 <MobilePolaroidImage>
                   <img 
-                    src={getImageUrl(polaroid.image_path)} 
+                    src={getImageUrl(polaroid)} 
                     alt={polaroid.name} 
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    onError={(e) => {
+                      // Fallback to a placeholder on error
+                      e.target.onerror = null;
+                      e.target.src = 'https://via.placeholder.com/100x80?text=Not+Found';
+                    }}
                   />
                 </MobilePolaroidImage>
               </MobilePolaroid>

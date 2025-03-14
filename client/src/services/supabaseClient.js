@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { v4 as uuidv4 } from 'uuid';
 
 // Initialize the Supabase client
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
@@ -226,7 +227,7 @@ export const getOrderDetails = async (sessionId) => {
 };
 
 /**
- * Fetch home page polaroids
+ * Fetch home page polaroids with improved image handling
  */
 export const getHomePolaroids = async () => {
   try {
@@ -241,5 +242,52 @@ export const getHomePolaroids = async () => {
   } catch (error) {
     console.error('Error fetching home polaroids:', error);
     return [];
+  }
+};
+
+/**
+ * Upload a polaroid image to Supabase storage and update database
+ */
+export const uploadPolaroidImage = async (file, polaroidId) => {
+  try {
+    // Generate a unique filename with UUID
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${uuidv4()}.${fileExt}`;
+    const storagePath = `home/${fileName}`;
+    
+    // Upload to storage
+    const { data: uploadData, error: uploadError } = await supabase
+      .storage
+      .from('images')
+      .upload(storagePath, file, {
+        cacheControl: '3600',
+        upsert: false
+      });
+    
+    if (uploadError) throw uploadError;
+    
+    // Get metadata about the uploaded file
+    const { data: { publicUrl } } = supabase
+      .storage
+      .from('images')
+      .getPublicUrl(storagePath);
+    
+    // Update the database record
+    const { data: updateData, error: updateError } = await supabase
+      .from('home_polaroids')
+      .update({
+        image_storage_path: storagePath,
+        image_original_filename: file.name,
+        image_content_type: file.type,
+        image_uploaded_at: new Date().toISOString()
+      })
+      .eq('id', polaroidId);
+    
+    if (updateError) throw updateError;
+    
+    return { success: true, publicUrl };
+  } catch (error) {
+    console.error('Error uploading polaroid image:', error);
+    return { success: false, error: error.message };
   }
 }; 
