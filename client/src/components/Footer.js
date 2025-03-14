@@ -62,7 +62,8 @@ const Footer = () => {
           <FooterSection>
             <FooterHeading>Quick Links</FooterHeading>
             <FooterLink to="/">Home</FooterLink>
-            <FooterLink to="/coaching">1:1 Coaching</FooterLink>
+            {/* 1:1 Coaching temporarily hidden */}
+            {/* <FooterLink to="/coaching">1:1 Coaching</FooterLink> */}
             <FooterLink to="/plans">Independent Plans</FooterLink>
             <FooterLink to="/about">About Me</FooterLink>
             <FooterLink to="/contact">Contact</FooterLink>

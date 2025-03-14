@@ -516,7 +516,7 @@ const HomePage = () => {
             <ServiceImage>IMAGE PLACEHOLDER</ServiceImage>
             <ServiceTitle>1:1 COACHING</ServiceTitle>
             <p>Personalized fitness and nutrition guidance tailored to your specific goals and needs.</p>
-            <Button to="/coaching" style={{ marginTop: '1rem', fontFamily: "'Georgia', serif", fontWeight: "700" }}>Learn More</Button>
+            <Button to="/plans" style={{ marginTop: '1rem', fontFamily: "'Georgia', serif", fontWeight: "700" }}>Learn More</Button>
           </ServiceCard>
           
           <ServiceCard>
@@ -576,7 +576,7 @@ const HomePage = () => {
               <FeatureItem>ONGOING SUPPORT</FeatureItem>
             </FeatureList>
             
-            <Button to="/coaching" style={{ fontFamily: "'Georgia', serif", fontWeight: "700" }}>LEARN MORE</Button>
+            <Button to="/plans" style={{ fontFamily: "'Georgia', serif", fontWeight: "700" }}>LEARN MORE</Button>
           </FeatureContent>
         </FeatureGrid>
       </Section>

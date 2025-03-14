@@ -128,9 +128,10 @@ const Header = () => {
               <NavItem>
                 <NavLinkStyled to="/">Home</NavLinkStyled>
               </NavItem>
-              <NavItem>
+              {/* 1:1 Coaching temporarily hidden */}
+              {/* <NavItem>
                 <NavLinkStyled to="/coaching">1:1 Coaching</NavLinkStyled>
-              </NavItem>
+              </NavItem> */}
               <NavItem>
                 <NavLinkStyled to="/plans">Independent Plans</NavLinkStyled>
               </NavItem>
