@@ -4,6 +4,14 @@ import Section from '../components/Section';
 import Button from '../components/Button';
 import { getIndependentPlans, subscribeToNewsletter } from '../services/supabaseClient';
 import { useForm } from 'react-hook-form';
+// Import Font Awesome components
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { 
+  faShoppingBasket, faShoppingCart, faStore, 
+  faCalculator, faChartPie, faChartLine, 
+  faUtensils, faAppleAlt, faCarrot,
+  faLeaf, faDumbbell, faCocktail
+} from '@fortawesome/free-solid-svg-icons';
 
 // Create a component for white text with pink shadow
 const TealPinkEffect = styled.span`
@@ -29,12 +37,23 @@ const TealPinkEffect = styled.span`
 `;
 
 const HeaderSection = styled.div`
-  background-color: var(--teal);
+  background: linear-gradient(135deg, var(--teal) 0%, #1a9c98 100%);
   color: var(--black);
   padding: 5rem 0;
   text-align: center;
   position: relative;
   overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 70% 20%, rgba(255, 105, 180, 0.15) 0%, transparent 60%);
+    pointer-events: none;
+  }
 `;
 
 const HeaderTitle = styled.h1`
@@ -42,6 +61,8 @@ const HeaderTitle = styled.h1`
   margin-bottom: 1rem;
   font-family: 'Georgia', serif;
   font-weight: 700;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
   
   @media (max-width: 768px) {
     font-size: 2.5rem;
@@ -67,6 +88,13 @@ const CategoryNav = styled.div`
   justify-content: center;
   margin: 2rem 0;
   flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(5px);
   
   @media (max-width: 768px) {
     flex-direction: column;
@@ -75,20 +103,24 @@ const CategoryNav = styled.div`
 `;
 
 const CategoryButton = styled.button`
-  background: ${props => props.active ? 'var(--pink)' : 'transparent'};
+  background: ${props => props.active ? 'linear-gradient(135deg, var(--teal) 0%, var(--pink) 100%)' : 'transparent'};
   color: ${props => props.active ? 'white' : 'var(--black)'};
-  border: 2px solid ${props => props.active ? 'var(--pink)' : 'var(--teal)'};
+  border: 2px solid ${props => props.active ? 'transparent' : 'var(--teal)'};
   padding: 0.75rem 1.5rem;
   margin: 0 0.5rem 1rem;
-  border-radius: 4px;
+  border-radius: 50px;
   font-family: 'Georgia', serif;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: ${props => props.active ? '0 4px 10px rgba(0, 0, 0, 0.15)' : 'none'};
   
   &:hover {
-    background: ${props => props.active ? 'var(--pink)' : 'var(--teal)'};
-    color: white;
+    background: ${props => props.active 
+      ? 'linear-gradient(135deg, var(--teal) 0%, var(--pink) 100%)' 
+      : 'linear-gradient(135deg, rgba(0, 173, 168, 0.1) 0%, rgba(255, 105, 180, 0.1) 100%)'};
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   }
   
   @media (max-width: 768px) {
@@ -116,64 +148,112 @@ const PlansGrid = styled.div`
 `;
 
 const PlanCard = styled.div`
-  padding: 2rem;
-  border-radius: 4px;
-  background-color: var(--light-gray);
+  padding: 2.5rem;
+  border-radius: 12px;
+  background-color: var(--white);
   display: flex;
   flex-direction: column;
   position: relative;
-  transition: transform 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-top: 5px solid ${props => 
-    props.category === 'grocery' ? '#4CAF50' : 
-    props.category === 'macro' ? '#2196F3' : 
-    props.category === 'nutrition' ? '#FF9800' : 'var(--pink)'};
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: ${props => 
+      props.category === 'grocery' 
+        ? 'linear-gradient(135deg, #40E0D0 0%, #20C0B0 100%)' 
+        : props.category === 'macro' 
+        ? 'linear-gradient(135deg, #FF69B4 0%, #FF1493 100%)' 
+        : 'linear-gradient(135deg, #9370DB 0%, #8A2BE2 100%)'};
+  }
   
   &:hover {
     transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
   }
 `;
 
 const CategoryLabel = styled.div`
   position: absolute;
-  top: 0;
-  right: 0;
-  background-color: ${props => 
-    props.category === 'grocery' ? '#4CAF50' : 
-    props.category === 'macro' ? '#2196F3' : 
-    props.category === 'nutrition' ? '#FF9800' : 'var(--pink)'};
+  top: 10px;
+  right: 10px;
+  background: ${props => 
+    props.category === 'grocery' 
+      ? 'linear-gradient(135deg, #40E0D0 0%, #20C0B0 100%)' 
+      : props.category === 'macro' 
+      ? 'linear-gradient(135deg, #FF69B4 0%, #FF1493 100%)' 
+      : 'linear-gradient(135deg, #9370DB 0%, #8A2BE2 100%)'};
   color: white;
   padding: 0.25rem 0.75rem;
   font-size: 0.8rem;
-  border-radius: 0 0 0 4px;
+  border-radius: 50px;
   font-weight: bold;
   text-transform: uppercase;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 `;
 
-const PlanNumber = styled.div`
+const IconWrapper = styled.div`
   position: absolute;
-  top: 1rem;
-  left: 1rem;
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: var(--pink);
-  font-family: 'Georgia', serif;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  top: 1.5rem;
+  left: 1.5rem;
+  font-size: 1.8rem;
+  color: ${props => 
+    props.category === 'grocery' 
+      ? '#40E0D0' 
+      : props.category === 'macro' 
+      ? '#FF69B4' 
+      : '#9370DB'};
+  opacity: 0.9;
+  transition: all 0.3s ease;
+  
+  ${PlanCard}:hover & {
+    transform: scale(1.1);
+  }
 `;
 
 const PlanTitle = styled.h3`
   font-size: 1.5rem;
-  margin: 1.5rem 0 1rem;
+  margin: 2.5rem 0 1rem;
   font-family: 'Georgia', serif;
   font-weight: 600;
+  color: var(--black);
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+`;
+
+const PlanDescription = styled.p`
+  color: #555;
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
 `;
 
 const PlanPrice = styled.div`
   font-size: 2rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   font-weight: bold;
   color: var(--pink);
   font-family: 'Georgia', serif;
+  display: flex;
+  align-items: center;
+  
+  &::before {
+    content: '';
+    display: block;
+    width: 30px;
+    height: 2px;
+    background-color: var(--pink);
+    margin-right: 10px;
+    opacity: 0.5;
+  }
 `;
 
 const SectionTitle = styled.h2`
@@ -182,34 +262,50 @@ const SectionTitle = styled.h2`
   color: var(--black);
   margin-bottom: 1.5rem;
   text-align: center;
+  font-size: 2.2rem;
+  letter-spacing: 1px;
 `;
 
 const CategoryTitle = styled.h2`
   font-family: 'Georgia', serif;
   font-weight: 600;
   color: ${props => 
-    props.category === 'grocery' ? '#4CAF50' : 
-    props.category === 'macro' ? '#2196F3' : 
-    props.category === 'nutrition' ? '#FF9800' : 'var(--black)'};
-  margin: 3rem 0 1rem;
+    props.category === 'grocery' ? '#20C0B0' : 
+    props.category === 'macro' ? '#FF1493' : 
+    props.category === 'nutrition' ? '#8A2BE2' : 'var(--black)'};
+  margin: 4rem 0 1rem;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 2.2rem;
+  letter-spacing: 1px;
   
   &::before, &::after {
     content: '';
     flex: 1;
-    border-bottom: 2px solid ${props => 
-      props.category === 'grocery' ? '#4CAF50' : 
-      props.category === 'macro' ? '#2196F3' : 
-      props.category === 'nutrition' ? '#FF9800' : 'var(--pink)'};
+    height: 2px;
+    background: ${props => 
+      props.category === 'grocery' 
+        ? 'linear-gradient(to right, transparent, #40E0D0)' 
+        : props.category === 'macro' 
+        ? 'linear-gradient(to right, transparent, #FF69B4)' 
+        : 'linear-gradient(to right, transparent, #9370DB)'};
     margin: 0 1rem;
+  }
+  
+  &::after {
+    background: ${props => 
+      props.category === 'grocery' 
+        ? 'linear-gradient(to left, transparent, #40E0D0)' 
+        : props.category === 'macro' 
+        ? 'linear-gradient(to left, transparent, #FF69B4)' 
+        : 'linear-gradient(to left, transparent, #9370DB)'};
   }
   
   @media (max-width: 768px) {
     &::before, &::after {
-      display: none;
+      width: 30px;
     }
   }
 `;
@@ -217,45 +313,95 @@ const CategoryTitle = styled.h2`
 const CategoryDescription = styled.p`
   text-align: center;
   max-width: 800px;
-  margin: 0 auto 2rem;
-  font-family: 'Georgia', serif;
+  margin: 0 auto 2.5rem;
+  font-family: 'Arial', sans-serif;
+  line-height: 1.8;
+  color: #555;
+  font-size: 1.1rem;
 `;
 
 const EmptyCategory = styled.div`
   text-align: center;
-  padding: 3rem;
-  background-color: #f9f9f9;
-  border-radius: 8px;
+  padding: 4rem 2rem;
+  background: linear-gradient(135deg, #f9f9f9 0%, #f3f3f3 100%);
+  border-radius: 12px;
   margin: 2rem 0;
+  border: 1px dashed #ddd;
+  
+  h3 {
+    font-family: 'Georgia', serif;
+    margin-bottom: 1rem;
+    color: var(--teal);
+  }
+  
+  p {
+    color: #666;
+    font-family: 'Arial', sans-serif;
+  }
 `;
 
 const SubscriptionForm = styled.form`
   max-width: 500px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 2.5rem;
   background-color: var(--white);
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 `;
 
 const SubscriptionInput = styled.input`
   width: 100%;
-  padding: 0.75rem;
-  margin-bottom: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 0.9rem 1rem;
+  margin-bottom: 1.2rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50px;
   font-family: 'Arial', sans-serif;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  
+  &:focus {
+    outline: none;
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(0, 173, 168, 0.2);
+  }
+  
+  &::placeholder {
+    color: #aaa;
+  }
 `;
 
 const FormMessage = styled.div`
   margin-top: 1rem;
-  padding: 0.5rem;
+  padding: 0.8rem;
   text-align: center;
-  border-radius: 4px;
+  border-radius: 8px;
   color: ${props => props.error ? '#e74c3c' : '#2ecc71'};
   background-color: ${props => props.error ? '#fadbd8' : '#d5f5e3'};
   font-family: 'Arial', sans-serif;
+  animation: fadeIn 0.5s ease;
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 `;
+
+// Helper function to get appropriate icon for each plan
+const getCategoryIcon = (category, title) => {
+  if (category === 'grocery') {
+    if (title.toLowerCase().includes('budget')) return faShoppingCart;
+    if (title.toLowerCase().includes('seasonal')) return faLeaf;
+    return faShoppingBasket;
+  } else if (category === 'macro') {
+    if (title.toLowerCase().includes('tracking')) return faChartLine;
+    if (title.toLowerCase().includes('cycling')) return faDumbbell;
+    return faCalculator;
+  } else { // nutrition
+    if (title.toLowerCase().includes('restaurant')) return faUtensils;
+    if (title.toLowerCase().includes('busy')) return faCocktail;
+    return faAppleAlt;
+  }
+};
 
 const PlansPage = () => {
   const [plans, setPlans] = useState([]);
@@ -288,19 +434,19 @@ const PlansPage = () => {
   // Fallback plans organized by category
   const fallbackPlans = [
     // Grocery Guides
-    { id: 1, title: "HEALTHY GROCERY SHOPPING GUIDE", category: "grocery", price: 19.99, description: "A comprehensive list of nutritious food options to keep your pantry stocked with healthy choices.", order: 1, icon: "🛒" },
-    { id: 2, title: "BUDGET-FRIENDLY MEAL ESSENTIALS", category: "grocery", price: 14.99, description: "Learn how to shop for nutritious foods without breaking the bank.", order: 2, icon: "💰" },
-    { id: 3, title: "SEASONAL PRODUCE GUIDE", category: "grocery", price: 12.99, description: "Make the most of in-season fruits and vegetables for maximum nutrition and flavor.", order: 3, icon: "🍎" },
+    { id: 1, title: "HEALTHY GROCERY SHOPPING GUIDE", category: "grocery", price: 19.99, description: "A comprehensive list of nutritious food options to keep your pantry stocked with healthy choices.", order: 1 },
+    { id: 2, title: "BUDGET-FRIENDLY MEAL ESSENTIALS", category: "grocery", price: 14.99, description: "Learn how to shop for nutritious foods without breaking the bank.", order: 2 },
+    { id: 3, title: "SEASONAL PRODUCE GUIDE", category: "grocery", price: 12.99, description: "Make the most of in-season fruits and vegetables for maximum nutrition and flavor.", order: 3 },
     
     // Macro Guides
-    { id: 4, title: "MACRO CALCULATION BASICS", category: "macro", price: 24.99, description: "Learn how to calculate your ideal macronutrients for your specific goals.", order: 4, icon: "🔢" },
-    { id: 5, title: "CUSTOM MACRO TRACKING GUIDE", category: "macro", price: 29.99, description: "Personalized macro recommendations with tracking templates and tools.", order: 5, icon: "📊" },
-    { id: 6, title: "MACRO CYCLING FOR WEIGHT LOSS", category: "macro", price: 34.99, description: "Advanced techniques for breaking through plateaus with strategic macro cycling.", order: 6, icon: "⚖️" },
+    { id: 4, title: "MACRO CALCULATION BASICS", category: "macro", price: 24.99, description: "Learn how to calculate your ideal macronutrients for your specific goals.", order: 4 },
+    { id: 5, title: "CUSTOM MACRO TRACKING GUIDE", category: "macro", price: 29.99, description: "Personalized macro recommendations with tracking templates and tools.", order: 5 },
+    { id: 6, title: "MACRO CYCLING FOR WEIGHT LOSS", category: "macro", price: 34.99, description: "Advanced techniques for breaking through plateaus with strategic macro cycling.", order: 6 },
     
     // Custom Nutrition Plans
-    { id: 7, title: "PERSONALIZED NUTRITION ASSESSMENT", category: "nutrition", price: 49.99, description: "Custom nutrition evaluation with personalized recommendations for your goals.", order: 7, icon: "📋" },
-    { id: 8, title: "RESTAURANT DINING GUIDE", category: "nutrition", price: 19.99, description: "How to make healthy choices when eating out at various types of restaurants.", order: 8, icon: "🍽️" },
-    { id: 9, title: "NUTRITION PLAN FOR BUSY LIFESTYLES", category: "nutrition", price: 39.99, description: "Quick and easy nutrition strategies for those with hectic schedules.", order: 9, icon: "⏱️" }
+    { id: 7, title: "PERSONALIZED NUTRITION ASSESSMENT", category: "nutrition", price: 49.99, description: "Custom nutrition evaluation with personalized recommendations for your goals.", order: 7 },
+    { id: 8, title: "RESTAURANT DINING GUIDE", category: "nutrition", price: 19.99, description: "How to make healthy choices when eating out at various types of restaurants.", order: 8 },
+    { id: 9, title: "NUTRITION PLAN FOR BUSY LIFESTYLES", category: "nutrition", price: 39.99, description: "Quick and easy nutrition strategies for those with hectic schedules.", order: 9 }
   ];
   
   // Function to categorize plans from API (temporary until backend is updated)
@@ -338,11 +484,11 @@ const PlansPage = () => {
     setActiveCategory(category);
     
     if (category === 'grocery' && groceryRef.current) {
-      groceryRef.current.scrollIntoView({ behavior: 'smooth' });
+      groceryRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } else if (category === 'macro' && macroRef.current) {
-      macroRef.current.scrollIntoView({ behavior: 'smooth' });
+      macroRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } else if (category === 'nutrition' && nutritionRef.current) {
-      nutritionRef.current.scrollIntoView({ behavior: 'smooth' });
+      nutritionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
   
@@ -374,7 +520,14 @@ const PlansPage = () => {
       
       <Section>
         <div className="container">
-          <p style={{ textAlign: 'center', maxWidth: '800px', margin: '0 auto 2rem' }}>
+          <p style={{ 
+            textAlign: 'center', 
+            maxWidth: '800px', 
+            margin: '0 auto 2rem',
+            fontSize: '1.1rem',
+            lineHeight: '1.8',
+            color: '#555'
+          }}>
             Explore our collection of nutrition guides designed to help you make informed food choices,
             understand macronutrients, and develop sustainable eating habits that support your health and fitness goals.
           </p>
@@ -407,7 +560,9 @@ const PlansPage = () => {
           </CategoryNav>
           
           {loading ? (
-            <p style={{ textAlign: 'center' }}>Loading guides...</p>
+            <div style={{ textAlign: 'center', padding: '3rem' }}>
+              <p style={{ fontSize: '1.1rem', color: '#555' }}>Loading guides...</p>
+            </div>
           ) : (
             <>
               {/* Grocery Guides Section */}
@@ -420,22 +575,24 @@ const PlansPage = () => {
                 
                 {groceryPlans.length > 0 ? (
                   <PlansGrid>
-                    {groceryPlans.map((plan, index) => (
+                    {groceryPlans.map((plan) => (
                       <PlanCard key={plan.id} category="grocery">
                         <CategoryLabel category="grocery">Grocery</CategoryLabel>
-                        <PlanNumber>{plan.icon || '🛒'}</PlanNumber>
+                        <IconWrapper category="grocery">
+                          <FontAwesomeIcon icon={getCategoryIcon('grocery', plan.title)} />
+                        </IconWrapper>
                         <PlanTitle>{plan.title}</PlanTitle>
-                        <p>{plan.description || "A comprehensive grocery guide to help you make healthier food choices."}</p>
+                        <PlanDescription>
+                          {plan.description || "A comprehensive grocery guide to help you make healthier food choices."}
+                        </PlanDescription>
                         <PlanPrice>${plan.price || 19.99}</PlanPrice>
-                        <p style={{ marginTop: 'auto' }}>
-                          <Button 
-                            to={`/checkout?plan=${plan.id}`} 
-                            variant="primary"
-                            fullWidth
-                          >
-                            Purchase Guide
-                          </Button>
-                        </p>
+                        <Button 
+                          to={`/checkout?plan=${plan.id}`} 
+                          variant="primary"
+                          fullWidth
+                        >
+                          Purchase Guide
+                        </Button>
                       </PlanCard>
                     ))}
                   </PlansGrid>
@@ -457,22 +614,24 @@ const PlansPage = () => {
                 
                 {macroPlans.length > 0 ? (
                   <PlansGrid>
-                    {macroPlans.map((plan, index) => (
+                    {macroPlans.map((plan) => (
                       <PlanCard key={plan.id} category="macro">
                         <CategoryLabel category="macro">Macro</CategoryLabel>
-                        <PlanNumber>{plan.icon || '📊'}</PlanNumber>
+                        <IconWrapper category="macro">
+                          <FontAwesomeIcon icon={getCategoryIcon('macro', plan.title)} />
+                        </IconWrapper>
                         <PlanTitle>{plan.title}</PlanTitle>
-                        <p>{plan.description || "Learn how to track and optimize your macronutrients for your specific fitness and health goals."}</p>
+                        <PlanDescription>
+                          {plan.description || "Learn how to track and optimize your macronutrients for your specific fitness and health goals."}
+                        </PlanDescription>
                         <PlanPrice>${plan.price || 24.99}</PlanPrice>
-                        <p style={{ marginTop: 'auto' }}>
-                          <Button 
-                            to={`/checkout?plan=${plan.id}`} 
-                            variant="primary"
-                            fullWidth
-                          >
-                            Purchase Guide
-                          </Button>
-                        </p>
+                        <Button 
+                          to={`/checkout?plan=${plan.id}`} 
+                          variant="primary"
+                          fullWidth
+                        >
+                          Purchase Guide
+                        </Button>
                       </PlanCard>
                     ))}
                   </PlansGrid>
@@ -494,22 +653,24 @@ const PlansPage = () => {
                 
                 {nutritionPlans.length > 0 ? (
                   <PlansGrid>
-                    {nutritionPlans.map((plan, index) => (
+                    {nutritionPlans.map((plan) => (
                       <PlanCard key={plan.id} category="nutrition">
                         <CategoryLabel category="nutrition">Nutrition</CategoryLabel>
-                        <PlanNumber>{plan.icon || '🥗'}</PlanNumber>
+                        <IconWrapper category="nutrition">
+                          <FontAwesomeIcon icon={getCategoryIcon('nutrition', plan.title)} />
+                        </IconWrapper>
                         <PlanTitle>{plan.title}</PlanTitle>
-                        <p>{plan.description || "Personalized nutrition strategies that fit your lifestyle and dietary preferences."}</p>
+                        <PlanDescription>
+                          {plan.description || "Personalized nutrition strategies that fit your lifestyle and dietary preferences."}
+                        </PlanDescription>
                         <PlanPrice>${plan.price || 39.99}</PlanPrice>
-                        <p style={{ marginTop: 'auto' }}>
-                          <Button 
-                            to={`/checkout?plan=${plan.id}`} 
-                            variant="primary"
-                            fullWidth
-                          >
-                            Purchase Plan
-                          </Button>
-                        </p>
+                        <Button 
+                          to={`/checkout?plan=${plan.id}`} 
+                          variant="primary"
+                          fullWidth
+                        >
+                          Purchase Plan
+                        </Button>
                       </PlanCard>
                     ))}
                   </PlansGrid>
@@ -525,10 +686,17 @@ const PlansPage = () => {
         </div>
       </Section>
       
-      <Section backgroundColor="var(--teal)">
+      <Section backgroundColor="linear-gradient(135deg, var(--teal) 0%, #1a9c98 100%)">
         <div className="container">
-          <SectionTitle>Subscribe for Nutrition Tips</SectionTitle>
-          <p style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto 2rem', color: 'white' }}>
+          <SectionTitle style={{ color: 'white' }}>Subscribe for Nutrition Tips</SectionTitle>
+          <p style={{ 
+            textAlign: 'center', 
+            maxWidth: '600px', 
+            margin: '0 auto 2rem', 
+            color: 'white',
+            lineHeight: '1.8',
+            fontSize: '1.1rem'
+          }}>
             Join our newsletter to receive free nutrition tips, healthy recipes, and exclusive discounts on our guides.
           </p>
           
@@ -538,7 +706,7 @@ const PlansPage = () => {
               placeholder="Your Name" 
               {...register('name', { required: true })}
             />
-            {errors.name && <span style={{ color: 'red' }}>Name is required</span>}
+            {errors.name && <span style={{ color: 'red', marginBottom: '1rem', display: 'block' }}>Name is required</span>}
             
             <SubscriptionInput 
               type="email" 
@@ -548,10 +716,23 @@ const PlansPage = () => {
                 pattern: /^\S+@\S+$/i 
               })}
             />
-            {errors.email?.type === 'required' && <span style={{ color: 'red' }}>Email is required</span>}
-            {errors.email?.type === 'pattern' && <span style={{ color: 'red' }}>Please enter a valid email</span>}
+            {errors.email?.type === 'required' && <span style={{ color: 'red', marginBottom: '1rem', display: 'block' }}>Email is required</span>}
+            {errors.email?.type === 'pattern' && <span style={{ color: 'red', marginBottom: '1rem', display: 'block' }}>Please enter a valid email</span>}
             
-            <Button type="submit" variant="primary" fullWidth disabled={submitSuccess}>
+            <Button 
+              type="submit" 
+              variant="primary" 
+              fullWidth 
+              disabled={submitSuccess}
+              style={{ 
+                borderRadius: '50px', 
+                padding: '0.9rem',
+                fontSize: '1.1rem',
+                fontWeight: 'bold',
+                boxShadow: '0 5px 15px rgba(0, 0, 0, 0.1)',
+                transition: 'all 0.3s ease'
+              }}
+            >
               {submitSuccess ? 'Subscribed!' : 'Subscribe Now'}
             </Button>
             
