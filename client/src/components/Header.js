@@ -24,6 +24,7 @@ const Logo = styled(Link)`
   font-weight: bold;
   color: var(--white);
   text-decoration: none;
+  text-shadow: 2px 2px 4px var(--pink);
 `;
 
 const Nav = styled.nav`
@@ -72,7 +73,7 @@ const NavLinkStyled = styled(NavLink)`
   transition: color 0.3s ease;
   
   &:hover, &.active {
-    color: var(--teal);
+    color: var(--pink);
   }
 `;
 
@@ -84,7 +85,7 @@ const CartIcon = styled(Link)`
   align-items: center;
   
   &:hover {
-    color: var(--teal);
+    color: var(--pink);
   }
   
   @media (max-width: 768px) {

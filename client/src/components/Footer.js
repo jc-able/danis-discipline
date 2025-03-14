@@ -22,7 +22,7 @@ const FooterSection = styled.div`
 const FooterHeading = styled.h3`
   font-size: 1.2rem;
   margin-bottom: 1.5rem;
-  color: var(--teal);
+  color: var(--pink);
 `;
 
 const FooterLink = styled(Link)`
