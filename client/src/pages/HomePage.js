@@ -34,6 +34,10 @@ const HeroSubtitle = styled.p`
   font-size: 1.2rem;
   text-transform: uppercase;
   letter-spacing: 3px;
+  font-family: 'Georgia', serif;
+  font-weight: 700;
+  color: var(--white);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   
   @media (max-width: 768px) {
     font-size: 1rem;
@@ -45,6 +49,8 @@ const DownArrow = styled.div`
   bottom: 2rem;
   font-size: 2rem;
   animation: bounce 2s infinite;
+  color: var(--white);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   
   @keyframes bounce {
     0%, 20%, 50%, 80%, 100% {
@@ -208,6 +214,8 @@ const ServiceImage = styled.div`
 const ServiceTitle = styled.h3`
   margin-bottom: 1rem;
   font-size: 1.5rem;
+  font-family: 'Georgia', serif;
+  font-weight: 700;
 `;
 
 const FeatureGrid = styled.div`
@@ -254,11 +262,37 @@ const FeatureItem = styled.li`
   }
 `;
 
-const PinkEffect = styled.span`
+// Create a new component for black text with teal shadow
+const PinkTealEffect = styled.span`
   position: relative;
   display: inline-block;
   color: var(--black);
   font-style: italic;
+  font-family: 'Georgia', serif;
+  font-weight: 700;
+  z-index: 2;
+  
+  &::before {
+    content: attr(data-text);
+    position: absolute;
+    left: -3px;
+    top: 3px;
+    color: var(--teal);
+    z-index: -1;
+    font-family: 'Georgia', serif;
+    font-weight: 700;
+    text-shadow: 0 0 10px var(--teal);
+  }
+`;
+
+// Create a new component for white text with pink shadow
+const TealPinkEffect = styled.span`
+  position: relative;
+  display: inline-block;
+  color: var(--white);
+  font-style: italic;
+  font-family: 'Georgia', serif;
+  font-weight: 700;
   z-index: 2;
   
   &::before {
@@ -268,6 +302,32 @@ const PinkEffect = styled.span`
     top: 3px;
     color: var(--pink);
     z-index: -1;
+    font-family: 'Georgia', serif;
+    font-weight: 700;
+    text-shadow: 0 0 10px var(--pink);
+  }
+`;
+
+// Create a special component for "Dani's Discipline" - white with pink shadow
+const WhitePinkEffect = styled.span`
+  position: relative;
+  display: inline-block;
+  color: var(--white);
+  font-style: italic;
+  font-family: 'Georgia', serif;
+  font-weight: 700;
+  z-index: 2;
+  
+  &::before {
+    content: attr(data-text);
+    position: absolute;
+    left: -3px;
+    top: 3px;
+    color: var(--pink);
+    z-index: -1;
+    font-family: 'Georgia', serif;
+    font-weight: 700;
+    text-shadow: 0 0 10px var(--pink);
   }
 `;
 
@@ -294,7 +354,7 @@ const HomePage = () => {
       <HeroSection>
         {!isMobile && (
           <>
-            {/* Polaroid 1 - Left side */}
+            {/* Polaroid 1 - Left side - move back to original position */}
             <Polaroid 
               rotation="rotate(-8deg)" 
               tapeTop="-5px" 
@@ -319,14 +379,14 @@ const HomePage = () => {
               tapeRight="-15px"
               tapeRotation="rotate(-5deg)"
               secondTapeRotation="rotate(90deg)"
-              style={{ top: '15%', right: '8%' }}
+              style={{ top: '8%', right: '8%' }}
             >
               <PolaroidImage>
                 Photo 2
               </PolaroidImage>
             </Polaroid>
             
-            {/* Polaroid 3 - Bottom right */}
+            {/* Polaroid 3 - Bottom right - lower it */}
             <Polaroid 
               rotation="rotate(-5deg)" 
               tapeTop="-5px" 
@@ -335,7 +395,7 @@ const HomePage = () => {
               tapeRight="-10px"
               tapeRotation="rotate(5deg)"
               secondTapeRotation="rotate(85deg)"
-              style={{ bottom: '20%', right: '10%' }}
+              style={{ bottom: '10%', right: '10%' }}
             >
               <PolaroidImage>
                 Photo 3
@@ -359,17 +419,21 @@ const HomePage = () => {
           </MobilePolaroidContainer>
         )}
         
-        <HeroTitle>Dani's Discipline</HeroTitle>
-        <HeroSubtitle>Achieve Goals Without Limits</HeroSubtitle>
+        <HeroTitle>
+          <WhitePinkEffect data-text="Dani's Discipline">Dani's Discipline</WhitePinkEffect>
+        </HeroTitle>
+        <HeroSubtitle>
+          Achieve Goals Without Limits
+        </HeroSubtitle>
         <DownArrow><FiArrowDown /></DownArrow>
       </HeroSection>
       
-      {/* Services Section */}
+      {/* Services Section - White Background */}
       <Section background="white" padding="5rem 0">
-        <Section.Title align="center">
-          LET'S WORK <PinkEffect data-text="together">together</PinkEffect>
+        <Section.Title align="center" style={{ fontFamily: "'Georgia', serif", fontWeight: "700" }}>
+          LET'S WORK <PinkTealEffect data-text="together">together</PinkTealEffect>
         </Section.Title>
-        <p style={{ textAlign: 'center', maxWidth: '800px', margin: '0 auto 3rem', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '0.9rem' }}>
+        <p style={{ textAlign: 'center', maxWidth: '800px', margin: '0 auto 3rem', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '0.9rem', fontFamily: "'Georgia', serif", fontWeight: "700" }}>
           WHETHER YOU ARE LOOKING FOR COMPLETE 1:1 COACHING, A CUSTOM
           INDEPENDENT PLAN, OR A WORKOUT PROGRAM TO PERFORM, I'VE GOT YOU
           COVERED.
@@ -380,51 +444,58 @@ const HomePage = () => {
             <ServiceImage>IMAGE PLACEHOLDER</ServiceImage>
             <ServiceTitle>1:1 COACHING</ServiceTitle>
             <p>Personalized fitness and nutrition guidance tailored to your specific goals and needs.</p>
-            <Button to="/coaching" style={{ marginTop: '1rem' }}>Learn More</Button>
+            <Button to="/coaching" style={{ marginTop: '1rem', fontFamily: "'Georgia', serif", fontWeight: "700" }}>Learn More</Button>
           </ServiceCard>
           
           <ServiceCard>
             <ServiceImage>IMAGE PLACEHOLDER</ServiceImage>
             <ServiceTitle>INDEPENDENT PLANS</ServiceTitle>
             <p>Self-guided fitness and nutrition plans for those who prefer to work at their own pace.</p>
-            <Button to="/plans" style={{ marginTop: '1rem' }}>Learn More</Button>
+            <Button to="/plans" style={{ marginTop: '1rem', fontFamily: "'Georgia', serif", fontWeight: "700" }}>Learn More</Button>
           </ServiceCard>
           
           <ServiceCard>
             <ServiceImage>IMAGE PLACEHOLDER</ServiceImage>
             <ServiceTitle>WORKOUT PROGRAMS</ServiceTitle>
             <p>Structured workout programs designed to help you build strength, endurance, and overall fitness.</p>
-            <Button to="/training" style={{ marginTop: '1rem' }}>Learn More</Button>
+            <Button to="/training" style={{ marginTop: '1rem', fontFamily: "'Georgia', serif", fontWeight: "700" }}>Learn More</Button>
           </ServiceCard>
         </ServicesGrid>
       </Section>
       
-      {/* CTA Section */}
-      <Section background="teal" padding="4rem 0">
+      {/* CTA Section - Update background from teal to black */}
+      <Section background="black" padding="4rem 0">
         <div style={{ textAlign: 'center', maxWidth: '800px', margin: '0 auto' }}>
-          <Section.Title align="center">
-            WHERE DO I <PinkEffect data-text="start?">start?</PinkEffect>
+          <Section.Title align="center" style={{ 
+            fontFamily: "'Georgia', serif", 
+            fontWeight: "700", 
+            backgroundColor: "var(--black)", 
+            color: "var(--white)",
+            display: "inline-block",
+            padding: "0.5rem 1rem"
+          }}>
+            WHERE DO I <TealPinkEffect data-text="start?">start?</TealPinkEffect>
           </Section.Title>
-          <p>
+          <p style={{ fontFamily: "'Georgia', serif" }}>
             Not sure which option is right for you? Start with a consultation to discuss your goals and find the perfect fit for your fitness journey.
           </p>
-          <Button to="/contact" style={{ marginTop: '2rem' }}>START NOW</Button>
+          <Button to="/contact" style={{ marginTop: '2rem', fontFamily: "'Georgia', serif", fontWeight: "700" }}>START NOW</Button>
         </div>
       </Section>
       
-      {/* Feature Section */}
+      {/* Feature Section - White Background */}
       <Section background="white" padding="5rem 0">
         <FeatureGrid>
           <FeatureImage>IMAGE PLACEHOLDER</FeatureImage>
           <FeatureContent>
-            <Section.Title>
-              1:1 <PinkEffect data-text="COACHING">COACHING</PinkEffect>
+            <Section.Title style={{ fontFamily: "'Georgia', serif", fontWeight: "700" }}>
+              1:1 <PinkTealEffect data-text="coaching">coaching</PinkTealEffect>
             </Section.Title>
-            <p>
+            <p style={{ fontFamily: "'Georgia', serif" }}>
               Work directly with a certified fitness and nutrition coach to create a customized plan that fits your lifestyle and helps you achieve your goals.
             </p>
             
-            <FeatureList>
+            <FeatureList style={{ fontFamily: "'Georgia', serif", fontWeight: "700" }}>
               <FeatureItem>12 WEEKS LONG</FeatureItem>
               <FeatureItem>1:1 PERSONAL COACH</FeatureItem>
               <FeatureItem>PERSONALIZED NUTRITION PLAN</FeatureItem>
@@ -433,7 +504,7 @@ const HomePage = () => {
               <FeatureItem>ONGOING SUPPORT</FeatureItem>
             </FeatureList>
             
-            <Button to="/coaching">LEARN MORE</Button>
+            <Button to="/coaching" style={{ fontFamily: "'Georgia', serif", fontWeight: "700" }}>LEARN MORE</Button>
           </FeatureContent>
         </FeatureGrid>
       </Section>

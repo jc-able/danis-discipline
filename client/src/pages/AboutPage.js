@@ -4,11 +4,61 @@ import Section from '../components/Section';
 import Button from '../components/Button';
 import { getCertifications } from '../services/supabaseClient';
 
-const HeaderSection = styled.div`
-  background-color: var(--black);
+// Create a special component for white text with pink shadow (like "Dani's Discipline")
+const WhitePinkEffect = styled.span`
+  position: relative;
+  display: inline-block;
   color: var(--white);
+  font-style: italic;
+  font-family: 'Georgia', serif;
+  font-weight: 700;
+  z-index: 2;
+  
+  &::before {
+    content: attr(data-text);
+    position: absolute;
+    left: -3px;
+    top: 3px;
+    color: var(--pink);
+    z-index: -1;
+    font-family: 'Georgia', serif;
+    font-weight: 700;
+    text-shadow: 0 0 10px var(--pink);
+  }
+`;
+
+const HeaderSection = styled.div`
+  background-color: var(--teal);
+  color: var(--black);
   padding: 5rem 0;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+`;
+
+const HeaderTitle = styled.h1`
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  font-family: 'Georgia', serif;
+  font-weight: 700;
+  
+  @media (max-width: 768px) {
+    font-size: 2.5rem;
+  }
+`;
+
+const HeaderSubtitle = styled.p`
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-family: 'Georgia', serif;
+  font-weight: 700;
+  color: var(--white);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
 `;
 
 const NumberedSection = styled.div`
@@ -27,9 +77,20 @@ const SectionNumber = styled.div`
   font-size: 3rem;
   font-weight: bold;
   color: var(--pink);
+  font-family: 'Georgia', serif;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 `;
 
-const SectionContent = styled.div``;
+const SectionContent = styled.div`
+  font-family: 'Arial', sans-serif;
+`;
+
+const SectionTitle = styled.h2`
+  font-family: 'Georgia', serif;
+  font-weight: 600;
+  color: var(--black);
+  margin-bottom: 1rem;
+`;
 
 const CertificationsGrid = styled.div`
   display: grid;
@@ -46,10 +107,17 @@ const CertificationCard = styled.div`
   background-color: var(--light-gray);
   padding: 2rem;
   border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+  }
 `;
 
-const CertificationTitle = styled.h4`
-  font-size: 1.2rem;
+const CertificationTitle = styled.h3`
+  font-family: 'Georgia', serif;
+  font-weight: 600;
   margin-bottom: 0.5rem;
 `;
 
@@ -124,90 +192,59 @@ const AboutPage = () => {
     <>
       <HeaderSection>
         <div className="container">
-          <Section.Title align="center" color="white">
-            about <span className="italic">me</span>
-          </Section.Title>
-          <Section.Subtitle align="center" color="white" uppercase={true}>
-            CERTIFIED FITNESS & NUTRITION COACH
-          </Section.Subtitle>
+          <HeaderTitle>
+            ABOUT <WhitePinkEffect data-text="me">me</WhitePinkEffect>
+          </HeaderTitle>
+          <HeaderSubtitle>Learn about my journey and certifications</HeaderSubtitle>
         </div>
       </HeaderSection>
       
       <Section>
         <div className="container">
+          <SectionTitle>My Journey</SectionTitle>
           <NumberedSection>
             <SectionNumber>01</SectionNumber>
             <SectionContent>
-              <Section.Title>My Story</Section.Title>
-              <p>
-                My journey into fitness and nutrition coaching began with my own personal transformation. 
-                After struggling with my own health and fitness goals, I discovered the power of 
-                personalized training and nutrition guidance. This experience inspired me to become a 
-                certified coach to help others achieve their own transformations.
-              </p>
-              <p>
-                With over 5 years of experience in the fitness industry, I've worked with clients of all 
-                ages and fitness levels, helping them build sustainable habits that lead to lasting results. 
-                My approach combines evidence-based methods with practical strategies that fit into real life.
-              </p>
-              <p>
-                I believe that fitness should be accessible to everyone, regardless of their starting point. 
-                My mission is to empower you with the knowledge, tools, and support you need to reach your 
-                goals and maintain your results long-term.
-              </p>
+              <p>I began my fitness journey in 2010 after struggling with my own weight and health issues. After transforming my own body and mind, I realized I could help others do the same.</p>
             </SectionContent>
           </NumberedSection>
           
           <NumberedSection>
             <SectionNumber>02</SectionNumber>
             <SectionContent>
-              <Section.Title>My Philosophy</Section.Title>
-              <p>
-                I believe in a holistic approach to fitness and nutrition that focuses on sustainable, 
-                long-term changes rather than quick fixes. My coaching methodology centers on:
-              </p>
-              <ul style={{ marginLeft: '2rem', marginTop: '1rem', marginBottom: '1rem' }}>
-                <li>Personalization over one-size-fits-all approaches</li>
-                <li>Building sustainable habits that become a lifestyle</li>
-                <li>Finding balance between discipline and flexibility</li>
-                <li>Education and empowerment rather than dependency</li>
-                <li>Progress over perfection</li>
-                <li>Evidence-based methods adapted to individual needs</li>
-              </ul>
-              <p>
-                My goal is not just to help you achieve temporary results, but to equip you with the 
-                knowledge and skills to maintain your progress and continue improving long after our 
-                coaching relationship ends.
-              </p>
+              <p>I pursued multiple certifications in fitness and nutrition to ensure I had the knowledge to support my clients effectively.</p>
             </SectionContent>
           </NumberedSection>
           
-          <Section.Title>Certifications</Section.Title>
-          
-          {loading ? (
-            <Loader>Loading certifications...</Loader>
-          ) : (
-            <CertificationsGrid>
-              {displayCertifications.map((cert) => (
-                <CertificationCard key={cert.id}>
-                  <CertificationTitle>{cert.title}</CertificationTitle>
-                  <CertificationOrg>{cert.organization}</CertificationOrg>
-                  <p>{cert.year}</p>
-                </CertificationCard>
-              ))}
-            </CertificationsGrid>
-          )}
-          
-          <CTASection>
-            <Section.Title align="center">
-              Ready to work together?
-            </Section.Title>
-            <p style={{ maxWidth: '800px', margin: '0 auto 2rem' }}>
-              Let's create a personalized plan that will help you achieve your fitness and nutrition goals 
-              through expert guidance, accountability, and support.
-            </p>
-            <Button to="/coaching">START COACHING</Button>
-          </CTASection>
+          <NumberedSection>
+            <SectionNumber>03</SectionNumber>
+            <SectionContent>
+              <p>Today, I've worked with over 500 clients, helping them achieve their fitness goals while maintaining a balanced lifestyle.</p>
+            </SectionContent>
+          </NumberedSection>
+        </div>
+      </Section>
+      
+      <Section backgroundColor="var(--teal)">
+        <div className="container">
+          <SectionTitle>My Certifications</SectionTitle>
+          <CertificationsGrid>
+            {displayCertifications.map((cert) => (
+              <CertificationCard key={cert.id}>
+                <CertificationTitle>{cert.title}</CertificationTitle>
+                <CertificationOrg>{cert.organization}</CertificationOrg>
+                <p>{cert.year}</p>
+              </CertificationCard>
+            ))}
+          </CertificationsGrid>
+        </div>
+      </Section>
+      
+      <Section>
+        <div className="container text-center">
+          <SectionTitle>Ready to Start Your Journey?</SectionTitle>
+          <p>I'd love to help you achieve your fitness and discipline goals.</p>
+          <Button to="/contact" variant="primary">Contact Me Today</Button>
         </div>
       </Section>
     </>

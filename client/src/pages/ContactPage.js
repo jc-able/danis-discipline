@@ -2,231 +2,274 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Section from '../components/Section';
 import Button from '../components/Button';
+import { FiMail, FiPhone, FiInstagram } from 'react-icons/fi';
+import { sendContactForm } from '../services/supabaseClient';
 import { useForm } from 'react-hook-form';
-import { submitContactForm } from '../services/supabaseClient';
+
+// Create a component for white text with pink shadow (like "start?")
+const TealPinkEffect = styled.span`
+  position: relative;
+  display: inline-block;
+  color: var(--white);
+  font-style: italic;
+  font-family: 'Georgia', serif;
+  font-weight: 700;
+  z-index: 2;
+  
+  &::before {
+    content: attr(data-text);
+    position: absolute;
+    left: -3px;
+    top: 3px;
+    color: var(--pink);
+    z-index: -1;
+    font-family: 'Georgia', serif;
+    font-weight: 700;
+    text-shadow: 0 0 10px var(--pink);
+  }
+`;
 
 const HeaderSection = styled.div`
-  background-color: var(--black);
-  color: var(--white);
+  background-color: var(--teal);
+  color: var(--black);
   padding: 5rem 0;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+`;
+
+const HeaderTitle = styled.h1`
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  font-family: 'Georgia', serif;
+  font-weight: 700;
+  
+  @media (max-width: 768px) {
+    font-size: 2.5rem;
+  }
+`;
+
+const HeaderSubtitle = styled.p`
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-family: 'Georgia', serif;
+  font-weight: 700;
+  color: var(--white);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
 `;
 
 const ContactGrid = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
-  margin-top: 3rem;
+  grid-template-columns: 1fr 2fr;
+  gap: 3rem;
   
-  @media (max-width: 992px) {
+  @media (max-width: 768px) {
     grid-template-columns: 1fr;
-    gap: 3rem;
   }
 `;
 
-const FormContainer = styled.div``;
+const ContactInfo = styled.div`
+  background-color: var(--pink);
+  color: var(--white);
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+`;
 
-const FormGroup = styled.div`
+const InfoItem = styled.div`
+  display: flex;
+  align-items: center;
   margin-bottom: 1.5rem;
+  
+  svg {
+    font-size: 1.5rem;
+    margin-right: 1rem;
+  }
 `;
 
-const Label = styled.label`
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: bold;
+const ContactForm = styled.form`
+  background-color: var(--light-gray);
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
 
-const Input = styled.input`
+const FormInput = styled.input`
   width: 100%;
   padding: 0.75rem;
+  margin-bottom: 1rem;
   border: 1px solid #ddd;
   border-radius: 4px;
+  font-family: 'Arial', sans-serif;
 `;
 
-const TextArea = styled.textarea`
+const FormTextarea = styled.textarea`
   width: 100%;
   padding: 0.75rem;
+  margin-bottom: 1rem;
   border: 1px solid #ddd;
   border-radius: 4px;
   min-height: 150px;
+  font-family: 'Arial', sans-serif;
 `;
 
-const ErrorMessage = styled.p`
-  color: red;
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
-`;
-
-const SuccessMessage = styled.div`
-  background-color: #d4edda;
-  color: #155724;
-  padding: 1rem;
-  border-radius: 4px;
-  margin-bottom: 1rem;
-`;
-
-const ContactInfoContainer = styled.div``;
-
-const ContactInfoItem = styled.div`
-  margin-bottom: 2rem;
-`;
-
-const ContactInfoTitle = styled.h3`
-  font-size: 1.2rem;
+const FormLabel = styled.label`
+  display: block;
   margin-bottom: 0.5rem;
-  color: var(--pink);
+  font-weight: bold;
+  font-family: 'Georgia', serif;
+`;
+
+const SectionTitle = styled.h2`
+  font-family: 'Georgia', serif;
+  font-weight: 600;
+  color: var(--black);
+  margin-bottom: 1.5rem;
+`;
+
+const FormMessage = styled.div`
+  margin-top: 1rem;
+  padding: 0.5rem;
+  text-align: center;
+  border-radius: 4px;
+  color: ${props => props.error ? '#e74c3c' : '#2ecc71'};
+  background-color: ${props => props.error ? '#fadbd8' : '#d5f5e3'};
 `;
 
 const ContactPage = () => {
-  const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [submitError, setSubmitError] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  const { register, handleSubmit, reset, formState: { errors } } = useForm();
-  
-  const onSubmit = async (data) => {
-    setIsSubmitting(true);
-    setSubmitError('');
+    const { register, handleSubmit, formState: { errors }, reset } = useForm();
+    const [submitting, setSubmitting] = useState(false);
+    const [formMessage, setFormMessage] = useState('');
+    const [formError, setFormError] = useState(false);
     
-    try {
-      const result = await submitContactForm(data);
-      
-      if (result.success) {
-        setSubmitSuccess(true);
-        reset();
+    const onSubmit = async (data) => {
+        setSubmitting(true);
+        setFormMessage('');
+        setFormError(false);
         
-        // Reset success message after 5 seconds
-        setTimeout(() => {
-          setSubmitSuccess(false);
-        }, 5000);
-      } else {
-        setSubmitError('There was an error submitting your message. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error submitting contact form:', error);
-      setSubmitError('There was an error submitting your message. Please try again.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-  
-  return (
-    <>
-      <HeaderSection>
-        <div className="container">
-          <Section.Title align="center" color="white">
-            get in <span className="italic">touch</span>
-          </Section.Title>
-          <Section.Subtitle align="center" color="white" uppercase={true}>
-            I'D LOVE TO HEAR FROM YOU
-          </Section.Subtitle>
-        </div>
-      </HeaderSection>
-      
-      <Section>
-        <div className="container">
-          <ContactGrid>
-            <FormContainer>
-              <Section.Title>Send Me a Message</Section.Title>
-              
-              {submitSuccess && (
-                <SuccessMessage>
-                  Your message has been sent successfully! I'll get back to you soon.
-                </SuccessMessage>
-              )}
-              
-              {submitError && (
-                <ErrorMessage>{submitError}</ErrorMessage>
-              )}
-              
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <FormGroup>
-                  <Label htmlFor="name">NAME</Label>
-                  <Input 
-                    id="name"
-                    type="text" 
-                    {...register("name", { required: "Name is required" })}
-                  />
-                  {errors.name && <ErrorMessage>{errors.name.message}</ErrorMessage>}
-                </FormGroup>
-                
-                <FormGroup>
-                  <Label htmlFor="email">EMAIL</Label>
-                  <Input 
-                    id="email"
-                    type="email" 
-                    {...register("email", { 
-                      required: "Email is required",
-                      pattern: {
-                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                        message: "Invalid email address"
-                      }
-                    })}
-                  />
-                  {errors.email && <ErrorMessage>{errors.email.message}</ErrorMessage>}
-                </FormGroup>
-                
-                <FormGroup>
-                  <Label htmlFor="subject">SUBJECT</Label>
-                  <Input 
-                    id="subject"
-                    type="text" 
-                    {...register("subject", { required: "Subject is required" })}
-                  />
-                  {errors.subject && <ErrorMessage>{errors.subject.message}</ErrorMessage>}
-                </FormGroup>
-                
-                <FormGroup>
-                  <Label htmlFor="message">MESSAGE</Label>
-                  <TextArea 
-                    id="message"
-                    {...register("message", { 
-                      required: "Message is required",
-                      minLength: {
-                        value: 10,
-                        message: "Message should be at least 10 characters"
-                      }
-                    })}
-                  />
-                  {errors.message && <ErrorMessage>{errors.message.message}</ErrorMessage>}
-                </FormGroup>
-                
-                <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? 'SENDING...' : 'SEND MESSAGE'}
-                </Button>
-              </form>
-            </FormContainer>
+        try {
+            await sendContactForm(data);
+            setFormMessage('Thank you for your message! We will get back to you soon.');
+            reset();
+        } catch (error) {
+            setFormError(true);
+            setFormMessage('There was an error sending your message. Please try again.');
+            console.error(error);
+        } finally {
+            setSubmitting(false);
+        }
+    };
+    
+    return (
+        <>
+            <HeaderSection>
+                <div className="container">
+                    <HeaderTitle>
+                        GET IN <TealPinkEffect data-text="touch">touch</TealPinkEffect>
+                    </HeaderTitle>
+                    <HeaderSubtitle>Let's start the conversation</HeaderSubtitle>
+                </div>
+            </HeaderSection>
             
-            <ContactInfoContainer>
-              <Section.Title>Contact Information</Section.Title>
-              
-              <ContactInfoItem>
-                <ContactInfoTitle>PHONE</ContactInfoTitle>
-                <p>(123) 456-7890</p>
-              </ContactInfoItem>
-              
-              <ContactInfoItem>
-                <ContactInfoTitle>EMAIL</ContactInfoTitle>
-                <p>info@danisdiscipline.com</p>
-              </ContactInfoItem>
-              
-              <ContactInfoItem>
-                <ContactInfoTitle>ADDRESS</ContactInfoTitle>
-                <p>123 Fitness Street</p>
-                <p>Miami, FL 33101</p>
-              </ContactInfoItem>
-              
-              <ContactInfoItem>
-                <ContactInfoTitle>SOCIAL MEDIA</ContactInfoTitle>
-                <p>Instagram: @danisdiscipline</p>
-                <p>Facebook: DanisDiscipline</p>
-              </ContactInfoItem>
-            </ContactInfoContainer>
-          </ContactGrid>
-        </div>
-      </Section>
-    </>
-  );
+            <Section>
+                <div className="container">
+                    <ContactGrid>
+                        <ContactInfo>
+                            <SectionTitle style={{ color: 'white' }}>Get In Touch</SectionTitle>
+                            <p style={{ marginBottom: '2rem' }}>
+                                Have questions about my coaching services or training plans? 
+                                Reach out and I'll get back to you as soon as possible.
+                            </p>
+                            
+                            <InfoItem>
+                                <FiMail />
+                                <div>
+                                    <strong>Email</strong>
+                                    <p>info@danisdiscipline.com</p>
+                                </div>
+                            </InfoItem>
+                            
+                            <InfoItem>
+                                <FiPhone />
+                                <div>
+                                    <strong>Phone</strong>
+                                    <p>(123) 456-7890</p>
+                                </div>
+                            </InfoItem>
+                            
+                            <InfoItem>
+                                <FiInstagram />
+                                <div>
+                                    <strong>Instagram</strong>
+                                    <p>@danisdiscipline</p>
+                                </div>
+                            </InfoItem>
+                        </ContactInfo>
+                        
+                        <ContactForm onSubmit={handleSubmit(onSubmit)}>
+                            <SectionTitle>Send a Message</SectionTitle>
+                            
+                            <div>
+                                <FormLabel>Name</FormLabel>
+                                <FormInput 
+                                    type="text" 
+                                    placeholder="Your Name" 
+                                    {...register('name', { required: true })}
+                                />
+                                {errors.name && <span style={{ color: 'red' }}>Name is required</span>}
+                            </div>
+                            
+                            <div>
+                                <FormLabel>Email</FormLabel>
+                                <FormInput 
+                                    type="email" 
+                                    placeholder="Your Email" 
+                                    {...register('email', { 
+                                        required: true, 
+                                        pattern: /^\S+@\S+$/i 
+                                    })}
+                                />
+                                {errors.email?.type === 'required' && <span style={{ color: 'red' }}>Email is required</span>}
+                                {errors.email?.type === 'pattern' && <span style={{ color: 'red' }}>Please enter a valid email</span>}
+                            </div>
+                            
+                            <div>
+                                <FormLabel>Subject</FormLabel>
+                                <FormInput 
+                                    type="text" 
+                                    placeholder="Subject" 
+                                    {...register('subject', { required: true })}
+                                />
+                                {errors.subject && <span style={{ color: 'red' }}>Subject is required</span>}
+                            </div>
+                            
+                            <div>
+                                <FormLabel>Message</FormLabel>
+                                <FormTextarea 
+                                    placeholder="Your Message" 
+                                    {...register('message', { required: true })}
+                                />
+                                {errors.message && <span style={{ color: 'red' }}>Message is required</span>}
+                            </div>
+                            
+                            <Button type="submit" variant="primary" disabled={submitting}>
+                                {submitting ? 'Sending...' : 'Send Message'}
+                            </Button>
+                            
+                            {formMessage && (
+                                <FormMessage error={formError}>{formMessage}</FormMessage>
+                            )}
+                        </ContactForm>
+                    </ContactGrid>
+                </div>
+            </Section>
+        </>
+    );
 };
 
 export default ContactPage; 

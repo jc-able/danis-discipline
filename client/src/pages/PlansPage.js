@@ -5,11 +5,61 @@ import Button from '../components/Button';
 import { getIndependentPlans, subscribeToNewsletter } from '../services/supabaseClient';
 import { useForm } from 'react-hook-form';
 
+// Create a component for black text with teal shadow (like "together")
+const PinkTealEffect = styled.span`
+  position: relative;
+  display: inline-block;
+  color: var(--black);
+  font-style: italic;
+  font-family: 'Georgia', serif;
+  font-weight: 700;
+  z-index: 2;
+  
+  &::before {
+    content: attr(data-text);
+    position: absolute;
+    left: -3px;
+    top: 3px;
+    color: var(--teal);
+    z-index: -1;
+    font-family: 'Georgia', serif;
+    font-weight: 700;
+    text-shadow: 0 0 10px var(--teal);
+  }
+`;
+
 const HeaderSection = styled.div`
-  background-color: var(--black);
-  color: var(--white);
+  background-color: var(--teal);
+  color: var(--black);
   padding: 5rem 0;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+`;
+
+const HeaderTitle = styled.h1`
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  font-family: 'Georgia', serif;
+  font-weight: 700;
+  
+  @media (max-width: 768px) {
+    font-size: 2.5rem;
+  }
+`;
+
+const HeaderSubtitle = styled.p`
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-family: 'Georgia', serif;
+  font-weight: 700;
+  color: var(--white);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
 `;
 
 const PlansContainer = styled.div`
@@ -38,6 +88,7 @@ const PlanCard = styled.div`
   flex-direction: column;
   position: relative;
   transition: transform 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   
   &:hover {
     transform: translateY(-10px);
@@ -48,68 +99,62 @@ const PlanNumber = styled.div`
   position: absolute;
   top: 1rem;
   left: 1rem;
-  font-size: 0.9rem;
+  font-size: 1.2rem;
   font-weight: bold;
   color: var(--pink);
+  font-family: 'Georgia', serif;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 `;
 
 const PlanTitle = styled.h3`
   font-size: 1.5rem;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid var(--teal);
+  margin: 1.5rem 0 1rem;
+  font-family: 'Georgia', serif;
+  font-weight: 600;
 `;
 
-const ArrowIcon = styled.div`
-  font-size: 1.5rem;
-  margin-top: auto;
-  align-self: flex-end;
-  color: var(--pink);
-`;
-
-const NewsletterSection = styled.div`
-  margin-top: 5rem;
-  padding: 3rem;
-  background-color: var(--pink);
-  border-radius: 8px;
-  text-align: center;
-`;
-
-const FormContainer = styled.div`
-  max-width: 600px;
-  margin: 2rem auto 0;
-`;
-
-const FormGroup = styled.div`
-  margin-bottom: 1.5rem;
-`;
-
-const InputGroup = styled.div`
-  display: flex;
-  gap: 1rem;
-  
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
-`;
-
-const ErrorMessage = styled.p`
-  color: red;
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
-`;
-
-const SuccessMessage = styled.div`
-  background-color: #d4edda;
-  color: #155724;
-  padding: 1rem;
-  border-radius: 4px;
+const PlanPrice = styled.div`
+  font-size: 2rem;
   margin-bottom: 1rem;
+  font-weight: bold;
+  color: var(--pink);
+  font-family: 'Georgia', serif;
 `;
 
-const Loader = styled.div`
+const SectionTitle = styled.h2`
+  font-family: 'Georgia', serif;
+  font-weight: 600;
+  color: var(--black);
+  margin-bottom: 1.5rem;
   text-align: center;
-  padding: 3rem;
+`;
+
+const SubscriptionForm = styled.form`
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: var(--white);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+`;
+
+const SubscriptionInput = styled.input`
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: 'Arial', sans-serif;
+`;
+
+const FormMessage = styled.div`
+  margin-top: 1rem;
+  padding: 0.5rem;
+  text-align: center;
+  border-radius: 4px;
+  color: ${props => props.error ? '#e74c3c' : '#2ecc71'};
+  background-color: ${props => props.error ? '#fadbd8' : '#d5f5e3'};
+  font-family: 'Arial', sans-serif;
 `;
 
 const PlansPage = () => {
@@ -165,81 +210,87 @@ const PlansPage = () => {
     <>
       <HeaderSection>
         <div className="container">
-          <Section.Title align="center" color="white">
-            independent <span className="italic">plans</span>
-          </Section.Title>
-          <Section.Subtitle align="center" color="white" uppercase={true}>
-            CUSTOMIZED PLANS FOR SELF-GUIDED FITNESS
-          </Section.Subtitle>
-          <p style={{ maxWidth: '800px', margin: '0 auto' }}>
-            Take control of your fitness journey with our self-guided plans. These comprehensive 
-            programs provide the structure and guidance you need to achieve your goals on your own terms.
-          </p>
+          <HeaderTitle>
+            INDEPENDENT <PinkTealEffect data-text="plans">plans</PinkTealEffect>
+          </HeaderTitle>
+          <HeaderSubtitle>Self-guided programs for your journey</HeaderSubtitle>
         </div>
       </HeaderSection>
       
       <Section>
-        <PlansContainer>
-          {loading ? (
-            <Loader>Loading plans...</Loader>
-          ) : (
-            <PlansGrid>
-              {displayPlans.map((plan) => (
-                <PlanCard key={plan.id}>
-                  <PlanNumber>{plan.order < 10 ? `0${plan.order}` : plan.order}</PlanNumber>
-                  <PlanTitle>{plan.title}</PlanTitle>
-                  <p>{plan.description || "Customized plan to help you achieve your specific fitness and nutrition goals."}</p>
-                  <ArrowIcon>{plan.icon || "→"}</ArrowIcon>
-                </PlanCard>
-              ))}
-            </PlansGrid>
-          )}
+        <div className="container">
+          <SectionTitle>Available Training Plans</SectionTitle>
+          <p style={{ textAlign: 'center', maxWidth: '800px', margin: '0 auto 2rem' }}>
+            These self-guided plans provide detailed instructions and resources
+            to help you achieve your fitness goals on your own schedule.
+          </p>
           
-          <NewsletterSection>
-            <Section.Title align="center">
-              GET ON <span className="italic">the list</span>
-            </Section.Title>
-            <p>SIGN UP FOR MY EMAIL LIST AND ALWAYS STAY UP TO DATE WITH MACROHABITS</p>
+          {loading ? (
+            <p>Loading plans...</p>
+          ) : (
+            <PlansContainer>
+              <PlansGrid>
+                {displayPlans.map((plan, index) => (
+                  <PlanCard key={plan.id}>
+                    <PlanNumber>{`${index + 1}`.padStart(2, '0')}</PlanNumber>
+                    <PlanTitle>{plan.title}</PlanTitle>
+                    <p>{plan.description || "Customized plan to help you achieve your specific fitness and nutrition goals."}</p>
+                    <PlanPrice>${plan.price || "Price not available"}</PlanPrice>
+                    <p>Duration: {plan.duration || "Duration not available"}</p>
+                    <p style={{ marginTop: 'auto' }}>
+                      <Button 
+                        to={`/checkout?plan=${plan.id}`} 
+                        variant="primary"
+                        fullWidth
+                      >
+                        Purchase Plan
+                      </Button>
+                    </p>
+                  </PlanCard>
+                ))}
+              </PlansGrid>
+            </PlansContainer>
+          )}
+        </div>
+      </Section>
+      
+      <Section backgroundColor="var(--teal)">
+        <div className="container">
+          <SectionTitle>Subscribe for Free Resources</SectionTitle>
+          <p style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto 2rem' }}>
+            Join our newsletter to receive free workout tips, nutrition advice, and exclusive discounts.
+          </p>
+          
+          <SubscriptionForm onSubmit={handleSubmit(onSubscribe)}>
+            <SubscriptionInput 
+              type="text" 
+              placeholder="Your Name" 
+              {...register('name', { required: true })}
+            />
+            {errors.name && <span style={{ color: 'red' }}>Name is required</span>}
             
-            <FormContainer>
-              {submitSuccess && (
-                <SuccessMessage>
-                  Thank you for subscribing to our newsletter!
-                </SuccessMessage>
-              )}
-              
-              <form onSubmit={handleSubmit(onSubscribe)}>
-                <InputGroup>
-                  <FormGroup>
-                    <input 
-                      type="text" 
-                      placeholder="Your Name" 
-                      {...register("name", { required: "Name is required" })}
-                    />
-                    {errors.name && <ErrorMessage>{errors.name.message}</ErrorMessage>}
-                  </FormGroup>
-                  
-                  <FormGroup>
-                    <input 
-                      type="email" 
-                      placeholder="Your Email" 
-                      {...register("email", { 
-                        required: "Email is required",
-                        pattern: {
-                          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                          message: "Invalid email address"
-                        }
-                      })}
-                    />
-                    {errors.email && <ErrorMessage>{errors.email.message}</ErrorMessage>}
-                  </FormGroup>
-                </InputGroup>
-                
-                <Button type="submit">SIGN UP</Button>
-              </form>
-            </FormContainer>
-          </NewsletterSection>
-        </PlansContainer>
+            <SubscriptionInput 
+              type="email" 
+              placeholder="Your Email" 
+              {...register('email', { 
+                required: true, 
+                pattern: /^\S+@\S+$/i 
+              })}
+            />
+            {errors.email?.type === 'required' && <span style={{ color: 'red' }}>Email is required</span>}
+            {errors.email?.type === 'pattern' && <span style={{ color: 'red' }}>Please enter a valid email</span>}
+            
+            <Button type="submit" variant="primary" fullWidth disabled={submitSuccess}>
+              {submitSuccess ? 'Subscribed!' : 'Subscribe Now'}
+            </Button>
+            
+            {submitSuccess && (
+              <FormMessage>
+                Thank you for subscribing to our newsletter!
+              </FormMessage>
+            )}
+          </SubscriptionForm>
+        </div>
       </Section>
     </>
   );
