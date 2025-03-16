@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Section from '../components/Section';
 import Button from '../components/Button';
 import { getIndependentPlans } from '../services/supabaseClient';
+import { createPlanCheckout } from '../services/stripeService';
 // Import Font Awesome components
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
@@ -361,6 +362,7 @@ const PlansPage = () => {
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('all');
+  const [buyButtonLoading, setBuyButtonLoading] = useState(false);
   
   // Refs for scrolling to categories
   const groceryRef = useRef(null);
@@ -381,6 +383,26 @@ const PlansPage = () => {
     
     fetchPlans();
   }, []);
+  
+  // Handle direct checkout for Healthy Grocery Shopping Guide
+  const handleBuyGroceryGuide = async (plan) => {
+    try {
+      setBuyButtonLoading(true);
+      
+      // Send user directly to Stripe checkout
+      // Stripe will collect customer information, no need to collect it here
+      await createPlanCheckout(
+        plan,
+        { email: '', name: '' } // Stripe will collect this information
+      );
+      
+    } catch (error) {
+      console.error('Error initiating checkout:', error);
+      alert('There was an error processing your request. Please try again.');
+    } finally {
+      setBuyButtonLoading(false);
+    }
+  };
   
   // Fallback plans organized by category
   const fallbackPlans = [
@@ -522,13 +544,27 @@ const PlansPage = () => {
                           {plan.description || "A comprehensive grocery guide to help you make healthier food choices."}
                         </PlanDescription>
                         <PlanPrice>${plan.price || 19.99}</PlanPrice>
-                        <Button 
-                          to={`/checkout?plan=${plan.id}`} 
-                          variant="primary"
-                          fullWidth
-                        >
-                          Purchase Guide
-                        </Button>
+                        {/* Check if this is the Healthy Grocery Shopping Guide */}
+                        {plan.title.includes("HEALTHY GROCERY SHOPPING GUIDE") ? (
+                          // Direct Buy Now button for Healthy Grocery Shopping Guide
+                          <Button 
+                            onClick={() => handleBuyGroceryGuide(plan)}
+                            variant="primary"
+                            fullWidth
+                            disabled={buyButtonLoading}
+                          >
+                            {buyButtonLoading ? 'Processing...' : 'Buy Now'}
+                          </Button>
+                        ) : (
+                          // Regular Purchase Guide button for other plans
+                          <Button 
+                            to={`/checkout?plan=${plan.id}`} 
+                            variant="primary"
+                            fullWidth
+                          >
+                            Purchase Guide
+                          </Button>
+                        )}
                       </PlanCard>
                     ))}
                   </PlansGrid>
