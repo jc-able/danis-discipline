@@ -55,9 +55,9 @@ export const getIndependentPlans = async () => {
 export const getOrderDetails = async (sessionId) => {
   try {
     const { data, error } = await supabase
-      .from('orders')
-      .select('*')
-      .eq('session_id', sessionId)
+      .from('display_orders')
+      .select('*, independent_plans(*), coaching_packages(*)')
+      .eq('stripe_session_id', sessionId)
       .single();
 
     if (error) throw error;
@@ -73,7 +73,16 @@ export const getOrderDetails = async (sessionId) => {
       };
     }
     
-    return data;
+    // Map the database fields to what the UI expects
+    return {
+      id: data.id,
+      productName: data.product_type === 'plan' 
+        ? data.independent_plans?.title || 'Independent Plan'
+        : data.coaching_packages?.title || 'Coaching Package',
+      amount: `$${parseFloat(data.amount).toFixed(2)}`,
+      date: new Date(data.purchase_date).toLocaleDateString(),
+      email: data.customer_email
+    };
   } catch (error) {
     console.error('Error fetching order details:', error);
     // Return fallback data on error
