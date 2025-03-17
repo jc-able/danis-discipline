@@ -17,19 +17,28 @@ if (!supabaseUrl || !supabaseAnonKey) {
       select: () => ({
         eq: () => ({
           order: () => Promise.resolve({ data: [], error: null }),
-          single: () => Promise.resolve({ data: null, error: null })
+          single: () => Promise.resolve({ data: null, error: null }),
+          maybeSingle: () => Promise.resolve({ data: null, error: null })
         }),
         order: () => Promise.resolve({ data: [], error: null })
       }),
       update: () => ({
         eq: () => Promise.resolve({ data: {}, error: null })
-      })
+      }),
+      insert: () => Promise.resolve({ data: {}, error: null })
     }),
     storage: {
       from: () => ({
         upload: () => Promise.resolve({ data: {}, error: null }),
         getPublicUrl: () => ({ data: { publicUrl: '' } })
       })
+    },
+    auth: {
+      signInWithPassword: () => Promise.resolve({ data: null, error: { message: 'Mock auth error' } }),
+      signUp: () => Promise.resolve({ data: null, error: { message: 'Mock auth error' } }),
+      signOut: () => Promise.resolve({ error: null }),
+      getSession: () => Promise.resolve({ data: { session: null }, error: null }),
+      onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } })
     }
   };
 } else {
@@ -67,7 +76,7 @@ export const getIndependentPlans = async () => {
       .from('independent_plans')
       .select('*')
       .eq('active', true)
-      .order('order');
+      .order('display_order');
 
     if (error) throw error;
     return data;

@@ -13,6 +13,10 @@ import ContactPage from './pages/ContactPage';
 import CheckoutSuccessPage from './pages/CheckoutSuccessPage';
 import CheckoutCancelPage from './pages/CheckoutCancelPage';
 import NotFoundPage from './pages/NotFoundPage';
+import LoginPage from './pages/LoginPage';
+
+// Auth
+import ProtectedRoute from './components/ProtectedRoute';
 
 const MainContainer = styled.div`
   min-height: 100vh;
@@ -27,23 +31,31 @@ const ContentWrapper = styled.main`
 function App() {
   return (
     <MainContainer>
-      <Header />
-      
-      <ContentWrapper>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          {/* Coaching page temporarily hidden */}
-          {/* <Route path="/coaching" element={<CoachingPage />} /> */}
-          <Route path="/plans" element={<PlansPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="/checkout-success" element={<CheckoutSuccessPage />} />
-          <Route path="/checkout-cancel" element={<CheckoutCancelPage />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </ContentWrapper>
-      
-      <Footer />
+      <Routes>
+        {/* Public route - Login page */}
+        <Route path="/login" element={<LoginPage />} />
+        
+        {/* Protected routes - require authentication */}
+        <Route path="/" element={
+          <ProtectedRoute>
+            <Header />
+            <ContentWrapper>
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                {/* Coaching page temporarily hidden */}
+                {/* <Route path="/coaching" element={<CoachingPage />} /> */}
+                <Route path="/plans" element={<PlansPage />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/contact" element={<ContactPage />} />
+                <Route path="/checkout-success" element={<CheckoutSuccessPage />} />
+                <Route path="/checkout-cancel" element={<CheckoutCancelPage />} />
+                <Route path="*" element={<NotFoundPage />} />
+              </Routes>
+            </ContentWrapper>
+            <Footer />
+          </ProtectedRoute>
+        } />
+      </Routes>
     </MainContainer>
   );
 }
