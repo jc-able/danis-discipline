@@ -6,6 +6,7 @@ import styled from 'styled-components';
 
 // Pages
 import HomePage from './pages/HomePage';
+// eslint-disable-next-line no-unused-vars
 import CoachingPage from './pages/CoachingPage';
 import PlansPage from './pages/PlansPage';
 import AboutPage from './pages/AboutPage';
@@ -28,6 +29,18 @@ const ContentWrapper = styled.main`
   flex: 1;
 `;
 
+const ProtectedLayout = ({ children }) => {
+  return (
+    <>
+      <Header />
+      <ContentWrapper>
+        {children}
+      </ContentWrapper>
+      <Footer />
+    </>
+  );
+};
+
 function App() {
   return (
     <MainContainer>
@@ -35,24 +48,54 @@ function App() {
         {/* Public route - Login page */}
         <Route path="/login" element={<LoginPage />} />
         
-        {/* Protected routes - require authentication */}
+        {/* Protected routes */}
         <Route path="/" element={
           <ProtectedRoute>
-            <Header />
-            <ContentWrapper>
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                {/* Coaching page temporarily hidden */}
-                {/* <Route path="/coaching" element={<CoachingPage />} /> */}
-                <Route path="/plans" element={<PlansPage />} />
-                <Route path="/about" element={<AboutPage />} />
-                <Route path="/contact" element={<ContactPage />} />
-                <Route path="/checkout-success" element={<CheckoutSuccessPage />} />
-                <Route path="/checkout-cancel" element={<CheckoutCancelPage />} />
-                <Route path="*" element={<NotFoundPage />} />
-              </Routes>
-            </ContentWrapper>
-            <Footer />
+            <ProtectedLayout>
+              <HomePage />
+            </ProtectedLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/plans" element={
+          <ProtectedRoute>
+            <ProtectedLayout>
+              <PlansPage />
+            </ProtectedLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/about" element={
+          <ProtectedRoute>
+            <ProtectedLayout>
+              <AboutPage />
+            </ProtectedLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/contact" element={
+          <ProtectedRoute>
+            <ProtectedLayout>
+              <ContactPage />
+            </ProtectedLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/checkout-success" element={
+          <ProtectedRoute>
+            <ProtectedLayout>
+              <CheckoutSuccessPage />
+            </ProtectedLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="/checkout-cancel" element={
+          <ProtectedRoute>
+            <ProtectedLayout>
+              <CheckoutCancelPage />
+            </ProtectedLayout>
+          </ProtectedRoute>
+        } />
+        <Route path="*" element={
+          <ProtectedRoute>
+            <ProtectedLayout>
+              <NotFoundPage />
+            </ProtectedLayout>
           </ProtectedRoute>
         } />
       </Routes>

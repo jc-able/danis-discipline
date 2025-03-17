@@ -182,7 +182,7 @@ export const uploadPolaroidImage = async (file, polaroidId) => {
     const storagePath = `home/${fileName}`;
     
     // Upload to storage
-    const { data: uploadData, error: uploadError } = await supabase
+    const { error: uploadError } = await supabase
       .storage
       .from('images')
       .upload(storagePath, file, {
@@ -199,7 +199,7 @@ export const uploadPolaroidImage = async (file, polaroidId) => {
       .getPublicUrl(storagePath);
     
     // Update the database record
-    const { data: updateData, error: updateError } = await supabase
+    const { error: updateError } = await supabase
       .from('home_polaroids')
       .update({
         image_storage_path: storagePath,
