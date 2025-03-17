@@ -4,8 +4,11 @@ import axios from 'axios';
 // Initialize Stripe
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
-// API base URL
-const API_URL = process.env.REACT_APP_API_URL;
+// In production, use relative API URLs
+// In development, use the full URL from env variable
+const API_URL = process.env.NODE_ENV === 'production' 
+  ? '' // Empty string for relative URL
+  : process.env.REACT_APP_API_URL;
 
 /**
  * Create a checkout session for a coaching package
