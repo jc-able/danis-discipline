@@ -95,17 +95,25 @@ const createCheckoutSession = async (options) => {
  */
 const handleWebhookEvent = async (signature, rawBody) => {
   try {
+    console.log('Received webhook with signature:', signature.substring(0, 10) + '...');
+    
     // Verify event using Stripe's webhook secret
     const event = stripe.webhooks.constructEvent(
       rawBody,
       signature,
       process.env.STRIPE_WEBHOOK_SECRET
     );
+    
+    console.log('Webhook event verified successfully. Event type:', event.type);
+    console.log('Event data:', JSON.stringify(event.data.object, null, 2).substring(0, 500) + '...');
 
     // Handle different event types
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object;
+        
+        console.log('Processing completed checkout session:', session.id);
+        console.log('Payment intent:', session.payment_intent);
         
         // Update order status in database
         const { data, error } = await supabaseService.supabase
@@ -118,13 +126,20 @@ const handleWebhookEvent = async (signature, rawBody) => {
           .eq('stripeSessionId', session.id)
           .select();
 
-        if (error) throw error;
+        if (error) {
+          console.error('Error updating order status:', error);
+          throw error;
+        }
+        
+        console.log('Order status updated successfully:', data);
         
         return { event: event.type, success: true, data };
       }
       
       case 'payment_intent.payment_failed': {
         const paymentIntent = event.data.object;
+        
+        console.log('Processing failed payment intent:', paymentIntent.id);
         
         // Get the session ID from payment intent
         const paymentId = paymentIntent.id;
@@ -134,6 +149,8 @@ const handleWebhookEvent = async (signature, rawBody) => {
         
         if (sessions && sessions.data.length > 0) {
           const sessionId = sessions.data[0].id;
+          
+          console.log('Found session ID for failed payment:', sessionId);
           
           // Update order status in database
           const { data, error } = await supabaseService.supabase

@@ -56,19 +56,28 @@ const createCheckoutSession = async (req, res, next) => {
  */
 const webhook = async (req, res, next) => {
   try {
+    console.log('Webhook request received');
+    
     // Get the signature from headers
     const signature = req.headers['stripe-signature'];
     
     if (!signature) {
+      console.error('Stripe signature is missing in headers');
       return res.status(400).json({ message: 'Stripe signature is missing' });
     }
+    
+    console.log('Processing webhook with signature:', signature.substring(0, 10) + '...');
     
     // Process webhook event
     const result = await stripeService.handleWebhookEvent(signature, req.rawBody);
     
+    console.log('Webhook processed successfully. Event type:', result.event);
+    
     // If this was a successful checkout, send confirmation email
     if (result.event === 'checkout.session.completed' && result.data) {
       const order = result.data;
+      
+      console.log('Sending purchase confirmation email to:', order.customerEmail);
       
       // Send purchase confirmation email (async, don't wait)
       emailService.sendPurchaseConfirmation(order).catch(err => {
@@ -79,6 +88,10 @@ const webhook = async (req, res, next) => {
     res.json({ received: true });
   } catch (error) {
     console.error('Webhook error:', error);
+    
+    if (error.type === 'StripeSignatureVerificationError') {
+      console.error('Signature verification failed. Check STRIPE_WEBHOOK_SECRET.');
+    }
     
     // Still return 200 to avoid Stripe retrying
     res.status(200).json({ 

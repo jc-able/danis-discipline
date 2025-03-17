@@ -16,10 +16,24 @@ app.use(helmet()); // Security headers
 app.use(cors({
   origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'stripe-signature']
 }));
-app.use(express.json()); // Body parser for JSON
 app.use(morgan('dev')); // Logging
+
+// Import routes
+const coachingRoutes = require('./routes/coaching');
+const plansRoutes = require('./routes/plans');
+const contactRoutes = require('./routes/contact');
+const ordersRoutes = require('./routes/orders');
+const stripeRoutes = require('./routes/stripe');
+const imagesRoutes = require('./routes/images');
+
+// Apply stripe routes first (before JSON body parser)
+// This is important for webhook signature verification which needs the raw body
+app.use('/api', stripeRoutes); // Contains create-checkout-session, webhook, etc.
+
+// Apply JSON body parser for other routes
+app.use(express.json()); // Body parser for JSON
 
 // Set up rate limiting to prevent abuse
 const limiter = rateLimit({
@@ -30,20 +44,11 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// Import routes
-const coachingRoutes = require('./routes/coaching');
-const plansRoutes = require('./routes/plans');
-const contactRoutes = require('./routes/contact');
-const ordersRoutes = require('./routes/orders');
-const stripeRoutes = require('./routes/stripe');
-const imagesRoutes = require('./routes/images');
-
-// Apply routes
+// Apply other routes
 app.use('/api/coaching-packages', coachingRoutes);
 app.use('/api/independent-plans', plansRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/display-orders', ordersRoutes);
-app.use('/api', stripeRoutes); // Contains create-checkout-session, webhook, etc.
 app.use('/api/images', imagesRoutes);
 
 // Root route
