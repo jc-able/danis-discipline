@@ -396,6 +396,7 @@ const HomePage = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [polaroids, setPolaroids] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Check if device is mobile
   useEffect(() => {
@@ -416,10 +417,14 @@ const HomePage = () => {
     const fetchPolaroids = async () => {
       try {
         setLoading(true);
+        setError(null);
+        console.log('Fetching polaroids...');
         const data = await getHomePolaroids();
+        console.log('Polaroids data:', data);
         setPolaroids(data);
       } catch (error) {
         console.error('Error fetching polaroids:', error);
+        setError('Failed to load images. Please try again later.');
       } finally {
         setLoading(false);
       }
@@ -430,6 +435,7 @@ const HomePage = () => {
 
   // Filter polaroids by position
   const getDesktopPolaroids = () => {
+    if (!polaroids || polaroids.length === 0) return [];
     return polaroids.filter(p => 
       p.position === 'top-left' || 
       p.position === 'top-right' || 
@@ -438,6 +444,7 @@ const HomePage = () => {
   };
   
   const getMobilePolaroids = () => {
+    if (!polaroids || polaroids.length === 0) return [];
     return polaroids.filter(p => 
       p.position === 'mobile-left' || 
       p.position === 'mobile-right'
@@ -446,6 +453,8 @@ const HomePage = () => {
 
   // Get public URL for image
   const getImageUrl = (polaroid) => {
+    if (!polaroid) return '';
+    
     let url = '';
     
     // If we have a full URL from the database, use it first
@@ -454,31 +463,41 @@ const HomePage = () => {
     }
     // If we have a storage path, use that
     else if (polaroid.image_storage_path) {
-      const { data } = supabase.storage.from('images').getPublicUrl(polaroid.image_storage_path);
-      url = data?.publicUrl || '';
+      try {
+        const { data } = supabase.storage.from('images').getPublicUrl(polaroid.image_storage_path);
+        url = data?.publicUrl || '';
+      } catch (error) {
+        console.error('Error getting public URL:', error);
+        return '';
+      }
     }
     // Legacy fallback for old records using image_path
     else if (polaroid.image_path) {
-      // Extract the base path without extension
-      const basePath = polaroid.image_path.substring(0, polaroid.image_path.lastIndexOf('.')) || polaroid.image_path;
-      
-      // Try to get the public URL with the original path
-      const { data: originalData } = supabase.storage.from('images').getPublicUrl(polaroid.image_path);
-      
-      // If we have a valid URL, use it
-      if (originalData?.publicUrl) {
-        url = originalData.publicUrl;
-      }
-      else {
-        // If not, try common image formats
-        const formats = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.HEIC', '.JPG', '.JPEG', '.PNG'];
-        for (const format of formats) {
-          const { data } = supabase.storage.from('images').getPublicUrl(`${basePath}${format}`);
-          if (data?.publicUrl) {
-            url = data.publicUrl;
-            break;
+      try {
+        // Extract the base path without extension
+        const basePath = polaroid.image_path.substring(0, polaroid.image_path.lastIndexOf('.')) || polaroid.image_path;
+        
+        // Try to get the public URL with the original path
+        const { data: originalData } = supabase.storage.from('images').getPublicUrl(polaroid.image_path);
+        
+        // If we have a valid URL, use it
+        if (originalData?.publicUrl) {
+          url = originalData.publicUrl;
+        }
+        else {
+          // If not, try common image formats
+          const formats = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.HEIC', '.JPG', '.JPEG', '.PNG'];
+          for (const format of formats) {
+            const { data } = supabase.storage.from('images').getPublicUrl(`${basePath}${format}`);
+            if (data?.publicUrl) {
+              url = data.publicUrl;
+              break;
+            }
           }
         }
+      } catch (error) {
+        console.error('Error with legacy image path:', error);
+        return '';
       }
     }
     
@@ -490,6 +509,20 @@ const HomePage = () => {
     <>
       {/* Hero Section with Polaroids */}
       <HeroSection>
+        {/* Show error message if there is one */}
+        {error && (
+          <div style={{ 
+            backgroundColor: '#fff', 
+            padding: '20px', 
+            borderRadius: '5px', 
+            boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+            marginBottom: '20px',
+            color: 'red' 
+          }}>
+            {error}
+          </div>
+        )}
+        
         {!loading && !isMobile && (
           <>
             {getDesktopPolaroids().map((polaroid) => (

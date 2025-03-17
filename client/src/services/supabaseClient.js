@@ -5,11 +5,39 @@ import { v4 as uuidv4 } from 'uuid';
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
 const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
 
+// Check if environment variables are available and create the client
+let supabase;
+
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Supabase credentials missing in environment variables');
+  console.error('Supabase credentials missing in environment variables. Using mock client.');
+  
+  // Create a mock client that returns empty arrays for queries
+  supabase = {
+    from: () => ({
+      select: () => ({
+        eq: () => ({
+          order: () => Promise.resolve({ data: [], error: null }),
+          single: () => Promise.resolve({ data: null, error: null })
+        }),
+        order: () => Promise.resolve({ data: [], error: null })
+      }),
+      update: () => ({
+        eq: () => Promise.resolve({ data: {}, error: null })
+      })
+    }),
+    storage: {
+      from: () => ({
+        upload: () => Promise.resolve({ data: {}, error: null }),
+        getPublicUrl: () => ({ data: { publicUrl: '' } })
+      })
+    }
+  };
+} else {
+  console.log('Creating Supabase client with credentials - URL exists:', !!supabaseUrl);
+  supabase = createClient(supabaseUrl, supabaseAnonKey);
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export { supabase };
 
 /**
  * Fetch all coaching packages
@@ -54,11 +82,30 @@ export const getIndependentPlans = async () => {
  */
 export const getOrderDetails = async (sessionId) => {
   try {
-    const { data, error } = await supabase
+    // Try both field naming conventions
+    let data, error;
+    
+    // First try with snake_case (stripe_session_id)
+    const result1 = await supabase
       .from('display_orders')
       .select('*, independent_plans(*), coaching_packages(*)')
       .eq('stripe_session_id', sessionId)
-      .single();
+      .maybeSingle();
+      
+    if (result1.data) {
+      data = result1.data;
+      error = result1.error;
+    } else {
+      // If not found, try with camelCase (stripeSessionId)
+      const result2 = await supabase
+        .from('display_orders')
+        .select('*, independent_plans(*), coaching_packages(*)')
+        .eq('stripeSessionId', sessionId)
+        .maybeSingle();
+        
+      data = result2.data;
+      error = result2.error;
+    }
 
     if (error) throw error;
     
